@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.jobmate.ui.fragments.LoginFragment"
+        android:label="Đăng nhập"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.jobmate.ui.fragments.RegisterFragment"
+        android:label="Đăng ký"
+        tools:layout="@layout/fragment_register">
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_registerFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.jobmate.ui.fragments.HomeFragment"
+        android:label="JobMate"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_jobDetailFragment"
+            app:destination="@id/jobDetailFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_applicationsFragment"
+            app:destination="@id/applicationsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/jobDetailFragment"
+        android:name="com.example.jobmate.ui.fragments.JobDetailFragment"
+        android:label="Chi tiết công việc"
+        tools:layout="@layout/fragment_job_detail">
+        <argument
+            android:name="jobId"
+            app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.jobmate.ui.fragments.ProfileFragment"
+        android:label="Hồ sơ cá nhân"
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_profileFragment_to_resumesFragment"
+            app:destination="@id/resumesFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/resumesFragment"
+        android:name="com.example.jobmate.ui.fragments.ResumesFragment"
+        android:label="Quản lý CV"
+        tools:layout="@layout/fragment_resumes">
+        <action
+            android:id="@+id/action_resumesFragment_to_createResumeFragment"
+            app:destination="@id/createResumeFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/createResumeFragment"
+        android:name="com.example.jobmate.ui.fragments.CreateResumeFragment"
+        android:label="Tạo CV"
+        tools:layout="@layout/fragment_create_resume" />
+
+    <fragment
+        android:id="@+id/applicationsFragment"
+        android:name="com.example.jobmate.ui.fragments.ApplicationsFragment"
+        android:label="Việc làm đã ứng tuyển"
+        tools:layout="@layout/fragment_applications">
+        <action
+            android:id="@+id/action_applicationsFragment_to_jobDetailFragment"
+            app:destination="@id/jobDetailFragment" />
+        <action
+            android:id="@+id/action_applicationsFragment_to_applicationDetailFragment"
+            app:destination="@id/applicationDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/applicationDetailFragment"
+        android:name="com.example.jobmate.ui.fragments.ApplicationDetailFragment"
+        android:label="Chi tiết ứng tuyển"
+        tools:layout="@layout/fragment_application_detail">
+        <argument
+            android:name="applicationId"
+            app:argType="integer" />
+    </fragment>
+
+</navigation>

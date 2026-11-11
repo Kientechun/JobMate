@@ -1,0 +1,15 @@
+E:\Jobmate\backend\src\JobMate.Application\obj\Debug\net10.0\JobMate.Application.csproj.AssemblyReference.cache
+E:\Jobmate\backend\src\JobMate.Application\obj\Debug\net10.0\JobMate.Application.GeneratedMSBuildEditorConfig.editorconfig
+E:\Jobmate\backend\src\JobMate.Application\obj\Debug\net10.0\JobMate.Application.AssemblyInfoInputs.cache
+E:\Jobmate\backend\src\JobMate.Application\obj\Debug\net10.0\JobMate.Application.AssemblyInfo.cs
+E:\Jobmate\backend\src\JobMate.Application\obj\Debug\net10.0\JobMate.Application.csproj.CoreCompileInputs.cache
+E:\Jobmate\backend\src\JobMate.Application\bin\Debug\net10.0\JobMate.Application.deps.json
+E:\Jobmate\backend\src\JobMate.Application\bin\Debug\net10.0\JobMate.Application.dll
+E:\Jobmate\backend\src\JobMate.Application\bin\Debug\net10.0\JobMate.Application.pdb
+E:\Jobmate\backend\src\JobMate.Application\bin\Debug\net10.0\JobMate.Domain.dll
+E:\Jobmate\backend\src\JobMate.Application\bin\Debug\net10.0\JobMate.Domain.pdb
+E:\Jobmate\backend\src\JobMate.Application\obj\Debug\net10.0\JobMate..45F89268.Up2Date
+E:\Jobmate\backend\src\JobMate.Application\obj\Debug\net10.0\JobMate.Application.dll
+E:\Jobmate\backend\src\JobMate.Application\obj\Debug\net10.0\refint\JobMate.Application.dll
+E:\Jobmate\backend\src\JobMate.Application\obj\Debug\net10.0\JobMate.Application.pdb
+E:\Jobmate\backend\src\JobMate.Application\obj\Debug\net10.0\ref\JobMate.Application.dll

@@ -1,0 +1,90 @@
+@model IEnumerable<JobMate.Domain.Entities.JobApplication>
+@{
+    ViewData["Title"] = "Applicants Management";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>@ViewData["Title"]</h4>
+    <div class="d-flex gap-2">
+        <select class="form-select form-select-sm" style="width: 200px;">
+            <option value="">All Jobs</option>
+            @* Populate with active jobs *@
+        </select>
+        <select class="form-select form-select-sm" style="width: 150px;">
+            <option value="">All Statuses</option>
+            <option value="0">Pending</option>
+            <option value="3">Under Review</option>
+            <option value="1">Approved</option>
+            <option value="2">Rejected</option>
+        </select>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4">Candidate</th>
+                        <th>Applied For</th>
+                        <th>Applied Date</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <img src="https://ui-avatars.com/api/?name=@item.UserId&background=random" class="rounded-circle me-3" width="40">
+                                    <div>
+                                        <div class="fw-bold">Candidate #@item.UserId</div>
+                                        <div class="text-muted small">@item.Resume?.FullName</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="fw-bold">@item.Job?.Title</div>
+                                <div class="text-muted small">@item.Job?.Location</div>
+                            </td>
+                            <td>@item.CreatedAt.ToString("MMM dd, yyyy")</td>
+                            <td>
+                                @switch (item.Status)
+                                {
+                                    case JobMate.Domain.Enums.ApplicationStatus.Pending:
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                        break;
+                                    case JobMate.Domain.Enums.ApplicationStatus.UnderReview:
+                                        <span class="badge bg-info text-dark">Under Review</span>
+                                        break;
+                                    case JobMate.Domain.Enums.ApplicationStatus.Approved:
+                                        <span class="badge bg-success">Approved</span>
+                                        break;
+                                    case JobMate.Domain.Enums.ApplicationStatus.Rejected:
+                                        <span class="badge bg-danger">Rejected</span>
+                                        break;
+                                }
+                            </td>
+                            <td class="text-end pe-4">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
+                                    View Profile
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                No applicants found.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

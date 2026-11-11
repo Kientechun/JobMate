@@ -1,0 +1,11 @@
+E:\Jobmate\backend\src\JobMate.Domain\bin\Debug\net10.0\JobMate.Domain.deps.json
+E:\Jobmate\backend\src\JobMate.Domain\bin\Debug\net10.0\JobMate.Domain.dll
+E:\Jobmate\backend\src\JobMate.Domain\bin\Debug\net10.0\JobMate.Domain.pdb
+E:\Jobmate\backend\src\JobMate.Domain\obj\Debug\net10.0\JobMate.Domain.GeneratedMSBuildEditorConfig.editorconfig
+E:\Jobmate\backend\src\JobMate.Domain\obj\Debug\net10.0\JobMate.Domain.AssemblyInfoInputs.cache
+E:\Jobmate\backend\src\JobMate.Domain\obj\Debug\net10.0\JobMate.Domain.AssemblyInfo.cs
+E:\Jobmate\backend\src\JobMate.Domain\obj\Debug\net10.0\JobMate.Domain.csproj.CoreCompileInputs.cache
+E:\Jobmate\backend\src\JobMate.Domain\obj\Debug\net10.0\JobMate.Domain.dll
+E:\Jobmate\backend\src\JobMate.Domain\obj\Debug\net10.0\refint\JobMate.Domain.dll
+E:\Jobmate\backend\src\JobMate.Domain\obj\Debug\net10.0\JobMate.Domain.pdb
+E:\Jobmate\backend\src\JobMate.Domain\obj\Debug\net10.0\ref\JobMate.Domain.dll

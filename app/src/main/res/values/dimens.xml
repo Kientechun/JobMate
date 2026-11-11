@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Standard Spacings -->
+    <dimen name="spacing_small">4dp</dimen>
+    <dimen name="spacing_standard">8dp</dimen>
+    <dimen name="spacing_medium">12dp</dimen>
+    <dimen name="spacing_large">16dp</dimen>
+    <dimen name="spacing_section">24dp</dimen>
+
+    <!-- Screen Paddings -->
+    <dimen name="screen_padding">20dp</dimen>
+
+    <!-- Corner Radii -->
+    <dimen name="card_corner_radius">16dp</dimen>
+    <dimen name="button_corner_radius">12dp</dimen>
+    <dimen name="input_corner_radius">12dp</dimen>
+    <dimen name="chip_corner_radius">20dp</dimen>
+
+    <!-- Typography -->
+    <dimen name="text_heading_xlarge">28sp</dimen>
+    <dimen name="text_heading_large">24sp</dimen>
+    <dimen name="text_title">18sp</dimen>
+    <dimen name="text_body">16sp</dimen>
+    <dimen name="text_body_small">14sp</dimen>
+    <dimen name="text_caption">12sp</dimen>
+    <dimen name="text_button">16sp</dimen>
+
+    <!-- Elevation -->
+    <dimen name="card_elevation">2dp</dimen>
+</resources>

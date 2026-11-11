@@ -1,0 +1,46 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Administrator Login";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center py-5">
+        <div class="col-md-4">
+            <div class="card card-custom shadow-lg border-0">
+                <div class="card-header bg-danger text-white p-4 text-center border-0">
+                    <h3 class="mb-0 fw-bold">JobMate Admin</h3>
+                    <p class="mb-0 small opacity-75">Secure Control Panel</p>
+                </div>
+                <div class="card-body p-5">
+                    <form asp-action="Login" method="post">
+                        <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+                        <div asp-validation-summary="All" class="text-danger small mb-4"></div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">Admin Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-person"></i></span>
+                                <input type="email" name="email" class="form-control bg-light border-start-0" placeholder="admin@jobmate.com" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label text-muted small fw-bold">Secret Key</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-shield-lock"></i></span>
+                                <input type="password" name="password" class="form-control bg-light border-start-0" placeholder="••••••••" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-danger btn-lg w-100 mb-3 shadow-sm">
+                            Authorize Access
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <a href="/" class="text-decoration-none text-muted small">&larr; Back to Public Site</a>
+            </div>
+        </div>
+    </div>
+</div>

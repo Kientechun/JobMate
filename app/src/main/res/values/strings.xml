@@ -1,0 +1,89 @@
+<resources>
+    <string name="app_name">Jobmate</string>
+    <string name="login_welcome">Chào mừng trở lại!</string>
+    <string name="login_subtitle">Đăng nhập để khám phá cơ hội việc làm phù hợp với bạn.</string>
+    <string name="register_welcome">Tạo tài khoản</string>
+    <string name="register_subtitle">Bắt đầu hành trình tìm kiếm công việc của bạn.</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Mật khẩu</string>
+    <string name="full_name_hint">Họ và tên</string>
+    <string name="login_button">Đăng nhập</string>
+    <string name="register_button">Đăng ký</string>
+    <string name="no_account_yet">Chưa có tài khoản? Đăng ký</string>
+    <string name="already_have_account">Đã có tài khoản? Đăng nhập</string>
+    <string name="error_empty_fields">Vui lòng điền đầy đủ thông tin</string>
+    <string name="error_invalid_email">Email không hợp lệ</string>
+    <string name="error_short_password">Mật khẩu phải có ít nhất 6 ký tự</string>
+    <string name="login_success">Đăng nhập thành công</string>
+    <string name="register_success">Đăng ký thành công! Hãy đăng nhập.</string>
+    <string name="error_network">Lỗi kết nối mạng</string>
+    <string name="error_server">Lỗi máy chủ</string>
+    <string name="error_unknown">Lỗi không xác định</string>
+    <string name="error_password_mismatch">Mật khẩu xác nhận không khớp</string>
+    <string name="confirm_password_hint">Xác nhận mật khẩu</string>
+    <string name="apply_success">Ứng tuyển thành công!</string>
+    <string name="job_detail_title">Chi tiết công việc</string>
+    <string name="apply_button">Ứng tuyển ngay</string>
+    <string name="job_description">Mô tả công việc</string>
+    <string name="job_requirements">Yêu cầu</string>
+    <string name="search_hint">Tìm kiếm công việc...</string>
+    <string name="empty_jobs">Không tìm thấy công việc nào</string>
+    <string name="retry">Thử lại</string>
+    <string name="profile_title">Hồ sơ cá nhân</string>
+    <string name="logout_button">Đăng xuất</string>
+
+    <!-- Profile Sections -->
+    <string name="profile_career_group">Hồ sơ nghề nghiệp</string>
+    <string name="profile_personal_info">Thông tin cá nhân</string>
+    <string name="profile_personal_info_desc">Cập nhật thông tin cơ bản của bạn</string>
+    <string name="profile_my_cv">CV của tôi</string>
+    <string name="profile_my_cv_desc">Quản lý các bản CV ứng tuyển</string>
+    <string name="profile_skills">Kỹ năng</string>
+    <string name="profile_skills_desc">Kỹ năng chuyên môn và thế mạnh</string>
+    <string name="profile_education">Học vấn</string>
+    <string name="profile_education_desc">Lịch sử học tập và bằng cấp</string>
+    <string name="profile_experience">Kinh nghiệm làm việc</string>
+    <string name="profile_experience_desc">Quá trình làm việc đã qua</string>
+
+    <string name="profile_activity_group">Hoạt động</string>
+    <string name="profile_favorite_jobs">Việc làm yêu thích</string>
+    <string name="profile_favorite_jobs_desc">Các công việc bạn đã lưu</string>
+    <string name="profile_applied_jobs">Việc làm đã ứng tuyển</string>
+    <string name="profile_applied_jobs_desc">Theo dõi tiến độ hồ sơ</string>
+
+    <string name="profile_account_group">Tài khoản</string>
+    <string name="profile_settings">Cài đặt</string>
+    <string name="profile_settings_desc">Thông báo, bảo mật và ứng dụng</string>
+
+    <string name="profile_completion_title">Mức độ hoàn thiện hồ sơ</string>
+    <string name="profile_completion_hint">Bổ sung %1$s để thu hút nhà tuyển dụng</string>
+
+    <string name="logout_confirm_title">Đăng xuất</string>
+    <string name="logout_confirm_msg">Bạn có chắc chắn muốn đăng xuất khỏi JobMate?</string>
+    <string name="logout_confirm_yes">Đăng xuất</string>
+    <string name="cancel">Hủy</string>
+
+    <!-- Bottom Nav -->
+    <string name="nav_search">Tìm việc</string>
+    <string name="nav_applications">Ứng tuyển</string>
+    <string name="nav_profile">Tôi</string>
+
+    <!-- Applications Screen -->
+    <string name="applications_title">Đơn ứng tuyển</string>
+    <string name="applications_subtitle">Theo dõi trạng thái các công việc đã ứng tuyển</string>
+    <string name="status_all">Tất cả</string>
+    <string name="status_pending">Đang chờ</string>
+    <string name="status_approved">Đã chấp nhận</string>
+    <string name="status_rejected">Đã từ chối</string>
+    <string name="empty_applications_title">Chưa có đơn ứng tuyển</string>
+    <string name="empty_applications_desc">Bạn chưa ứng tuyển vào công việc nào. Hãy khám phá các cơ hội việc làm ngay!</string>
+    <string name="explore_jobs">Khám phá ngay</string>
+    <string name="applied_date_format">Ngày ứng tuyển: %1$s</string>
+    <string name="salary_format">%1$.0f$</string>
+    <string name="filter_empty_title">Không tìm thấy kết quả</string>
+    <string name="filter_empty_desc">Không có đơn ứng tuyển nào phù hợp với bộ lọc này.</string>
+    <string name="apply_job">Ứng tuyển công việc</string>
+    <string name="cover_letter_hint">Viết một chút về bản thân bạn và tại sao bạn phù hợp với vị trí này...</string>
+    <string name="submit_application">Nộp hồ sơ</string>
+    <string name="select_resume">Chọn CV ứng tuyển</string>
+</resources>

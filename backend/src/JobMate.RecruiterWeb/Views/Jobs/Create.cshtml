@@ -1,0 +1,76 @@
+@model JobMate.Domain.Entities.Job
+@{
+    ViewData["Title"] = "Post a New Job";
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-action="Index">Jobs</a></li>
+    <li class="breadcrumb-item active">Create</li>
+  </ol>
+</nav>
+
+<div class="card border-0 shadow-sm col-lg-8 mx-auto">
+    <div class="card-body p-4">
+        <h4 class="mb-4">Job Details</h4>
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <label asp-for="Title" class="form-label">Job Title</label>
+                    <input asp-for="Title" class="form-control" placeholder="e.g. Senior Software Engineer" required>
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="Location" class="form-label">Location</label>
+                    <input asp-for="Location" class="form-control" placeholder="e.g. Ho Chi Minh City, Remote" required>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="JobType" class="form-label">Job Type</label>
+                    <select asp-for="JobType" class="form-select">
+                        <option value="Full-time">Full-time</option>
+                        <option value="Part-time">Part-time</option>
+                        <option value="Contract">Contract</option>
+                        <option value="Freelance">Freelance</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="SalaryRange" class="form-label">Monthly Salary (USD)</label>
+                    <input asp-for="SalaryRange" type="number" class="form-control" placeholder="e.g. 2000">
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Experience" class="form-label">Experience Level</label>
+                    <input asp-for="Experience" class="form-control" placeholder="e.g. 3+ years">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">Job Description</label>
+                <textarea asp-for="Description" class="form-control" rows="8" placeholder="Outline responsibilities, requirements, and benefits..."></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <label asp-for="ExpiryDate" class="form-label">Application Deadline</label>
+                    <input asp-for="ExpiryDate" type="date" class="form-control" value="@DateTime.Now.AddMonths(1).ToString("yyyy-MM-dd")">
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="d-flex justify-content-end gap-2">
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                <button type="submit" name="status" value="0" class="btn btn-light">Save Draft</button>
+                <button type="submit" name="status" value="1" class="btn btn-primary px-4">Post Job</button>
+            </div>
+        </form>
+    </div>
+</div>

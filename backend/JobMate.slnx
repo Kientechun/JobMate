@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/JobMate.AdminWeb/JobMate.AdminWeb.csproj" />
+    <Project Path="src/JobMate.API/JobMate.API.csproj" />
+    <Project Path="src/JobMate.Application/JobMate.Application.csproj" />
+    <Project Path="src/JobMate.Domain/JobMate.Domain.csproj" />
+    <Project Path="src/JobMate.Infrastructure/JobMate.Infrastructure.csproj" />
+    <Project Path="src/JobMate.RecruiterWeb/JobMate.RecruiterWeb.csproj" />
+  </Folder>
+</Solution>
