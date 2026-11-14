@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("JobMate.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+961a8032bc4222a0e8808de6e7ed4e1fff6dd461")]
 [assembly: System.Reflection.AssemblyProductAttribute("JobMate.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JobMate.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

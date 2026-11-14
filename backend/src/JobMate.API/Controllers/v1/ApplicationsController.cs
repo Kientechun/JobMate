@@ -21,7 +21,7 @@ namespace JobMate.API.Controllers.v1
             _applicationService = applicationService;
         }
 
-        private string UserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        private string UserId => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
         [HttpPost]
         public async Task<ActionResult<ApiResponse<ApplicationDto>>> Apply(CreateApplicationRequest request)

@@ -22,10 +22,12 @@ namespace JobMate.API.Controllers.v1
         }
 
         [HttpGet]
-        public async Task<ActionResult<ApiResponse<PaginatedList<JobDto>>>> GetRecruiterJobs([FromQuery] string companyId, [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10)
+        public async Task<ActionResult<ApiResponse<PaginatedList<JobDto>>>> GetRecruiterJobs([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10)
         {
-            // Note: In a real app, we should verify that the current user belongs to the companyId.
-            var result = await _jobService.GetRecruiterJobsAsync(companyId, pageIndex, pageSize);
+            var companyId = _currentUserService.CompanyId;
+            if (companyId == null) return Forbid();
+
+            var result = await _jobService.GetRecruiterJobsAsync(companyId.Value, pageIndex, pageSize);
             return Ok(ApiResponse<PaginatedList<JobDto>>.Success(result));
         }
 
@@ -33,37 +35,44 @@ namespace JobMate.API.Controllers.v1
         public async Task<ActionResult<ApiResponse<int>>> CreateJob([FromBody] CreateJobRequest request)
         {
             var userId = _currentUserService.UserId;
-            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+            var companyId = _currentUserService.CompanyId;
+            if (string.IsNullOrEmpty(userId) || companyId == null) return Unauthorized();
 
+            request.CompanyId = companyId.Value; // Force companyId from token
             var result = await _jobService.CreateJobAsync(request, userId);
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ApiResponse<JobDto>>> GetJob(int id, [FromQuery] string companyId)
+        public async Task<ActionResult<ApiResponse<JobDto>>> GetJob(int id)
         {
-            var job = await _jobService.GetRecruiterJobByIdAsync(id, companyId);
+            var companyId = _currentUserService.CompanyId;
+            if (companyId == null) return Forbid();
+
+            var job = await _jobService.GetRecruiterJobByIdAsync(id, companyId.Value);
             if (job == null) return NotFound(ApiResponse<JobDto>.Failure("Job not found or access denied."));
             return Ok(ApiResponse<JobDto>.Success(job));
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<ApiResponse<bool>>> UpdateJob(int id, [FromBody] UpdateJobRequest request, [FromQuery] string companyId)
+        public async Task<ActionResult<ApiResponse<bool>>> UpdateJob(int id, [FromBody] UpdateJobRequest request)
         {
             var userId = _currentUserService.UserId;
-            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+            var companyId = _currentUserService.CompanyId;
+            if (string.IsNullOrEmpty(userId) || companyId == null) return Unauthorized();
 
-            var result = await _jobService.UpdateJobAsync(id, request, userId, companyId);
+            var result = await _jobService.UpdateJobAsync(id, request, userId, companyId.Value);
             return Ok(result);
         }
 
         [HttpPatch("{id}/close")]
-        public async Task<ActionResult<ApiResponse<bool>>> CloseJob(int id, [FromQuery] string companyId)
+        public async Task<ActionResult<ApiResponse<bool>>> CloseJob(int id)
         {
             var userId = _currentUserService.UserId;
-            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+            var companyId = _currentUserService.CompanyId;
+            if (string.IsNullOrEmpty(userId) || companyId == null) return Unauthorized();
 
-            var result = await _jobService.CloseJobAsync(id, userId, companyId);
+            var result = await _jobService.CloseJobAsync(id, userId, companyId.Value);
             return Ok(result);
         }
     }

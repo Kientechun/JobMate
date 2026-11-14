@@ -33,7 +33,7 @@ namespace JobMate.API.Controllers.v1
                 .Include(r => r.Skills)
                 .FirstOrDefaultAsync(r => r.Id == id);
 
-            if (resume == null) return NotFound();
+            if (resume == null) return NotFound(JobMate.Application.Common.Models.ApiResponse<JobMate.Application.DTOs.AI.ResumeAnalysisDto>.Failure("Resume not found."));
             if (resume.UserId != _currentUserService.UserId) return Forbid();
 
             var analysisResult = await _aiService.AnalyzeResumeAsync(resume);
@@ -62,7 +62,7 @@ namespace JobMate.API.Controllers.v1
 
             await _context.SaveChangesAsync();
 
-            return Ok(analysisResult);
+            return Ok(JobMate.Application.Common.Models.ApiResponse<JobMate.Application.DTOs.AI.ResumeAnalysisDto>.Success(analysisResult));
         }
 
         [HttpGet("resumes/{id}/analysis")]
@@ -83,7 +83,7 @@ namespace JobMate.API.Controllers.v1
                 SuitableRoles = JsonSerializer.Deserialize<List<string>>(analysis.SuitableRolesJson) ?? new()
             };
 
-            return Ok(dto);
+            return Ok(JobMate.Application.Common.Models.ApiResponse<JobMate.Application.DTOs.AI.ResumeAnalysisDto>.Success(dto));
         }
 
         [HttpGet("jobs/recommendations")]
@@ -118,7 +118,7 @@ namespace JobMate.API.Controllers.v1
 
             var recommendations = await _aiService.GetJobRecommendationsAsync(resume, availableJobs);
 
-            return Ok(recommendations);
+            return Ok(JobMate.Application.Common.Models.ApiResponse<IEnumerable<JobMate.Application.DTOs.AI.JobRecommendationDto>>.Success(recommendations));
         }
     }
 }

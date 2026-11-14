@@ -1,4 +1,6 @@
 using System.Text;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using JobMate.API.Middleware;
 using JobMate.Application;
 using JobMate.Infrastructure;
@@ -13,6 +15,21 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+// Initialize Firebase Admin
+var firebasePath = builder.Configuration["Firebase:ServiceAccountPath"];
+if (!string.IsNullOrEmpty(firebasePath) && File.Exists(firebasePath))
+{
+    FirebaseApp.Create(new AppOptions()
+    {
+        Credential = GoogleCredential.FromFile(firebasePath)
+    });
+}
+else
+{
+    // Fallback or warning if needed for dev environment
+    // FirebaseApp.Create(); // Or handle appropriately
+}
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -82,8 +99,17 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("DefaultCors", policy =>
     {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
+        var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? new[] { "*" };
+        if (allowedOrigins.Contains("*"))
+        {
+            policy.AllowAnyOrigin();
+        }
+        else
+        {
+            policy.WithOrigins(allowedOrigins)
+                  .AllowCredentials();
+        }
+        policy.AllowAnyMethod()
               .AllowAnyHeader();
     });
 });
@@ -113,7 +139,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ExceptionMiddleware>();
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 app.UseCors("DefaultCors");
 
 app.UseAuthentication();

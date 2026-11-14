@@ -22,7 +22,7 @@ namespace JobMate.API.Controllers.v1
             _resumeService = resumeService;
         }
 
-        private string UserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        private string UserId => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
         [HttpGet]
         public async Task<ActionResult<ApiResponse<IEnumerable<ResumeDto>>>> GetMyResumes()
