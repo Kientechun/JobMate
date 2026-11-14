@@ -11,6 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.jobmate.data.models.CreateResumeRequestDTO
 import com.example.jobmate.databinding.FragmentCreateResumeBinding
 import com.example.jobmate.ui.viewmodel.ResumeViewModel
@@ -25,6 +26,7 @@ class CreateResumeFragment : Fragment() {
     private var _binding: FragmentCreateResumeBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ResumeViewModel by viewModels()
+    private val args: CreateResumeFragmentArgs by navArgs()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentCreateResumeBinding.inflate(inflater, container, false)
@@ -33,6 +35,10 @@ class CreateResumeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (args.resumeId != -1) {
+            viewModel.fetchResumeDetail(args.resumeId)
+        }
 
         binding.btnSaveResume.setOnClickListener {
             val request = CreateResumeRequestDTO(
@@ -47,9 +53,15 @@ class CreateResumeFragment : Fragment() {
                 skills = emptyList(),
                 projects = emptyList(),
                 certificates = emptyList(),
-                languages = emptyList()
+                languages = emptyList(),
+                fileUrl = viewModel.resumeDetail.value?.data?.fileUrl
             )
-            viewModel.createResume(request)
+            
+            if (args.resumeId == -1) {
+                viewModel.createResume(request)
+            } else {
+                viewModel.updateResume(args.resumeId, request)
+            }
         }
 
         observeViewModel()
@@ -58,19 +70,38 @@ class CreateResumeFragment : Fragment() {
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.createStatus.collectLatest { resource ->
-                    when (resource) {
-                        is Resource.Loading -> binding.btnSaveResume.isEnabled = false
-                        is Resource.Success -> {
-                            binding.btnSaveResume.isEnabled = true
-                            Toast.makeText(requireContext(), "Tạo CV thành công", Toast.LENGTH_SHORT).show()
-                            findNavController().popBackStack()
+                launch {
+                    viewModel.createStatus.collectLatest { resource ->
+                        when (resource) {
+                            is Resource.Loading -> binding.btnSaveResume.isEnabled = false
+                            is Resource.Success -> {
+                                binding.btnSaveResume.isEnabled = true
+                                val msg = if (args.resumeId == -1) "Tạo CV thành công" else "Cập nhật CV thành công"
+                                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+                                findNavController().popBackStack()
+                            }
+                            is Resource.Error -> {
+                                binding.btnSaveResume.isEnabled = true
+                                Toast.makeText(requireContext(), resource.message, Toast.LENGTH_SHORT).show()
+                            }
+                            else -> {}
                         }
-                        is Resource.Error -> {
-                            binding.btnSaveResume.isEnabled = true
-                            Toast.makeText(requireContext(), resource.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                launch {
+                    viewModel.resumeDetail.collectLatest { resource ->
+                        if (resource is Resource.Success) {
+                            val resume = resource.data
+                            binding.apply {
+                                etTitle.setText(resume?.title)
+                                etFullName.setText(resume?.fullName)
+                                etEmail.setText(resume?.email)
+                                etPhone.setText(resume?.phoneNumber)
+                                etAddress.setText(resume?.address)
+                                etSummary.setText(resume?.summary)
+                            }
                         }
-                        else -> {}
                     }
                 }
             }

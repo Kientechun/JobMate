@@ -33,6 +33,8 @@ namespace JobMate.Infrastructure
             services.AddScoped<IJobService, JobService>();
             services.AddScoped<IResumeService, ResumeService>();
             services.AddScoped<IApplicationService, ApplicationService>();
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IInterviewService, InterviewService>();
 
             services.AddHttpClient<IAIService, AIService>();
 

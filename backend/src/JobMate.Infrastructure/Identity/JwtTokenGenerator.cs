@@ -34,6 +34,11 @@ namespace JobMate.Infrastructure.Identity
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
+            return GenerateTokenWithClaims(claims);
+        }
+
+        public string GenerateTokenWithClaims(IEnumerable<Claim> claims)
+        {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Key"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.UtcNow.AddMinutes(double.Parse(_configuration["JwtSettings:DurationInMinutes"]!));
@@ -51,10 +56,17 @@ namespace JobMate.Infrastructure.Identity
 
         public string GenerateRefreshToken()
         {
-            var randomNumber = new byte[32];
+            var randomNumber = new byte[64];
             using var rng = RandomNumberGenerator.Create();
             rng.GetBytes(randomNumber);
             return Convert.ToBase64String(randomNumber);
+        }
+
+        public string HashToken(string token)
+        {
+            using var sha256 = SHA256.Create();
+            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(token));
+            return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
         }
     }
 }

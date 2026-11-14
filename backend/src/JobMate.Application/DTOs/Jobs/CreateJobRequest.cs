@@ -32,7 +32,7 @@ namespace JobMate.Application.DTOs.Jobs
         public DateTime ExpiryDate { get; set; }
 
         [Required]
-        public string CompanyId { get; set; } = string.Empty;
+        public int CompanyId { get; set; }
 
         public int? CategoryId { get; set; }
     }

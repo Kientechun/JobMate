@@ -30,15 +30,39 @@ namespace JobMate.Infrastructure.Persistence
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<SavedJob> SavedJobs => Set<SavedJob>();
+        public DbSet<DeviceToken> DeviceTokens => Set<DeviceToken>();
+        public DbSet<Notification> Notifications => Set<Notification>();
+        public DbSet<Interview> Interviews => Set<Interview>();
+        public DbSet<Company> Companies => Set<Company>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            // Cấu hình Identity trước
             base.OnModelCreating(builder);
 
+            // Áp dụng cấu hình các Entity
+            builder.ApplyConfigurationsFromAssembly(
+                Assembly.GetExecutingAssembly());
+
+            // Quan hệ ApplicationUser - Company
+            builder.Entity<ApplicationUser>(entity =>
+            {
+                entity.HasOne(u => u.Company)
+                    .WithMany()
+                    .HasForeignKey(u => u.CompanyId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // Quan hệ RefreshToken - ApplicationUser
             builder.Entity<RefreshToken>(entity =>
             {
                 entity.HasKey(e => e.Id);
+
+                entity.HasOne<ApplicationUser>()
+                    .WithMany(u => u.RefreshTokens)
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
                 entity.Property(e => e.Token).IsRequired();
                 entity.HasIndex(e => e.Token).IsUnique();
             });
@@ -57,6 +81,27 @@ namespace JobMate.Infrastructure.Persistence
             builder.Entity<SavedJob>(entity =>
             {
                 entity.HasIndex(e => new { e.UserId, e.JobId }).IsUnique();
+            });
+
+            builder.Entity<DeviceToken>(entity =>
+            {
+                entity.Property(e => e.Token).IsRequired();
+                entity.HasIndex(e => e.Token).IsUnique();
+            });
+
+            builder.Entity<Notification>(entity =>
+            {
+                entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
+                entity.Property(e => e.Message).IsRequired().HasMaxLength(500);
+            });
+
+            builder.Entity<Interview>(entity =>
+            {
+                entity.Property(e => e.Location).IsRequired().HasMaxLength(500);
+                entity.HasOne(i => i.JobApplication)
+                    .WithMany()
+                    .HasForeignKey(i => i.JobApplicationId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
         }
 

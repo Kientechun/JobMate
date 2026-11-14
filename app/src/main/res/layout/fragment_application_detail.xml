@@ -159,7 +159,38 @@
                 android:layout_marginTop="24dp"
                 android:text="Rút hồ sơ ứng tuyển"
                 android:textColor="@color/error_red"
+                android:visibility="gone"
                 app:rippleColor="#1FFF0000" />
+
+            <!-- Recruiter Actions -->
+            <LinearLayout
+                android:id="@+id/recruiterActionGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnReject"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/reject"
+                    android:textColor="@color/error_red"
+                    app:strokeColor="@color/error_red" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnApprove"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/approve"
+                    app:backgroundTint="@color/success" />
+            </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

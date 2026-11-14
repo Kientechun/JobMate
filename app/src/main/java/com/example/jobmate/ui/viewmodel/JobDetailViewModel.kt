@@ -41,4 +41,31 @@ class JobDetailViewModel @Inject constructor(
             }
         }
     }
+
+    fun resetApplyState() {
+        _applyState.value = Resource.Empty()
+    }
+
+    private val _saveJobStatus = MutableStateFlow<Resource<Boolean>>(Resource.Empty())
+    val saveJobStatus: StateFlow<Resource<Boolean>> = _saveJobStatus
+
+    fun saveJob(jobId: Int) {
+        viewModelScope.launch {
+            jobRepository.saveJob(jobId).collect {
+                _saveJobStatus.value = it
+            }
+        }
+    }
+
+    fun unsaveJob(jobId: Int) {
+        viewModelScope.launch {
+            jobRepository.unsaveJob(jobId).collect {
+                _saveJobStatus.value = it
+            }
+        }
+    }
+
+    fun resetSaveStatus() {
+        _saveJobStatus.value = Resource.Empty()
+    }
 }

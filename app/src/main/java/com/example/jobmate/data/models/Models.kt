@@ -13,12 +13,16 @@ data class Job(
     val id: Int,
     val title: String,
     val companyName: String,
+    val companyLogo: String? = null,
     val location: String,
-    val salary: Double,
+    val salaryRange: Double,
     val description: String,
+    val requirements: String? = null,
+    val benefits: String? = null,
     val type: String,
     val experience: String,
-    val postedDate: String
+    val postedDate: String,
+    val isSaved: Boolean = false
 )
 
 data class Category(
@@ -33,8 +37,33 @@ data class AuthResponse(
     val user: User
 )
 
+enum class ApplicationStatus(val value: Int) {
+    PENDING(0),
+    APPROVED(1),
+    REJECTED(2),
+    UNDER_REVIEW(3);
+
+    companion object {
+        fun fromInt(value: Int) = values().find { it.value == value } ?: PENDING
+    }
+}
+
 // Mappers
 fun UserDTO.toDomain() = User(id, email, fullName, roles)
-fun JobDTO.toDomain() = Job(id, title, companyName, location, salaryRange, description, jobType, experience, createdAt)
+fun JobDTO.toDomain() = Job(
+    id = id,
+    title = title,
+    companyName = companyName,
+    companyLogo = companyLogo,
+    location = location,
+    salaryRange = salaryRange,
+    description = description,
+    requirements = requirements,
+    benefits = benefits,
+    type = jobType,
+    experience = experience,
+    postedDate = createdAt,
+    isSaved = isSaved
+)
 fun CategoryDTO.toDomain() = Category(id, name)
 fun AuthResponseDTO.toDomain() = AuthResponse(token, refreshToken, User(id, email, fullName, roles))

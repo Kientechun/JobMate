@@ -24,6 +24,8 @@ object NetworkModule {
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
+            redactHeader("Authorization")
+            redactHeader("Cookie")
         }
     }
 
@@ -47,7 +49,7 @@ object NetworkModule {
     @Singleton
     fun provideApiService(client: OkHttpClient): ApiService {
         return Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:5000/") // Địa chỉ mặc định cho Emulator truy cập host
+            .baseUrl("http://192.168.52.103:5223/") // Địa chỉ mặc định cho Emulator truy cập host
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

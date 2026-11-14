@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.jobmate.R
 import com.example.jobmate.data.models.CreateApplicationRequestDTO
@@ -51,6 +52,16 @@ class JobDetailFragment : Fragment() {
 
         binding.btnApply.setOnClickListener {
             showApplyDialog()
+        }
+
+        binding.btnFavorite.setOnClickListener {
+            currentJob?.let { job ->
+                if (job.isSaved) {
+                    viewModel.unsaveJob(job.id)
+                } else {
+                    viewModel.saveJob(job.id)
+                }
+            }
         }
 
         observeViewModel()
@@ -108,14 +119,16 @@ class JobDetailFragment : Fragment() {
                             is Resource.Success -> {
                                 binding.progressBar.visibility = View.GONE
                                 val job = resource.data
-                                currentJob = job
+                                currentJob = job?.copy(isSaved = job.isSaved) // Ensure we have the latest state
+                                updateFavoriteIcon(job?.isSaved ?: false)
                                 binding.apply {
                                     tvTitle.text = job?.title
                                     tvCompany.text = job?.companyName
                                     tvLocation.text = job?.location
-                                    tvSalary.text = job?.let { getString(R.string.salary_format, it.salary) }
+                                    tvSalary.text = job?.let { getString(R.string.salary_format, it.salaryRange) }
                                     tvDescription.text = job?.description
-                                    tvRequirements.text = ""
+                                    tvRequirements.text = job?.requirements ?: "Không có yêu cầu cụ thể"
+                                    tvBenefits.text = job?.benefits ?: "Không có thông tin quyền lợi"
                                 }
                             }
                             is Resource.Error -> {
@@ -138,20 +151,60 @@ class JobDetailFragment : Fragment() {
                 launch {
                     viewModel.applyState.collectLatest { resource ->
                         when (resource) {
-                            is Resource.Loading -> binding.btnApply.isEnabled = false
+                            is Resource.Loading -> {
+                                binding.btnApply.isEnabled = false
+                                binding.progressBar.visibility = View.VISIBLE
+                            }
                             is Resource.Success -> {
                                 binding.btnApply.isEnabled = true
+                                binding.progressBar.visibility = View.GONE
                                 Toast.makeText(requireContext(), R.string.apply_success, Toast.LENGTH_SHORT).show()
+                                viewModel.resetApplyState()
+                                findNavController().navigateUp()
                             }
                             is Resource.Error -> {
                                 binding.btnApply.isEnabled = true
+                                binding.progressBar.visibility = View.GONE
                                 Toast.makeText(requireContext(), resource.message, Toast.LENGTH_SHORT).show()
+                                viewModel.resetApplyState()
+                            }
+                            else -> {
+                                binding.progressBar.visibility = View.GONE
+                            }
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel.saveJobStatus.collectLatest { resource ->
+                        when (resource) {
+                            is Resource.Success -> {
+                                val isSaved = resource.data ?: false
+                                currentJob = currentJob?.copy(isSaved = isSaved)
+                                updateFavoriteIcon(isSaved)
+                                val message = if (isSaved) "Đã lưu công việc" else "Đã bỏ lưu công việc"
+                                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                                viewModel.resetSaveStatus()
+                            }
+                            is Resource.Error -> {
+                                Toast.makeText(requireContext(), resource.message, Toast.LENGTH_SHORT).show()
+                                viewModel.resetSaveStatus()
                             }
                             else -> {}
                         }
                     }
                 }
             }
+        }
+    }
+
+    private fun updateFavoriteIcon(isSaved: Boolean) {
+        if (isSaved) {
+            binding.btnFavorite.setImageResource(android.R.drawable.btn_star_big_on)
+            binding.btnFavorite.setColorFilter(requireContext().getColor(R.color.primary))
+        } else {
+            binding.btnFavorite.setImageResource(android.R.drawable.btn_star_big_off)
+            binding.btnFavorite.setColorFilter(requireContext().getColor(R.color.text_secondary))
         }
     }
 

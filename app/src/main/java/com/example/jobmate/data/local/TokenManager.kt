@@ -38,6 +38,12 @@ class TokenManager @Inject constructor(@ApplicationContext private val context: 
         }
     }
 
+    suspend fun updateName(name: String) {
+        context.dataStore.edit {
+            it[USER_NAME] = name
+        }
+    }
+
     suspend fun clear() {
         context.dataStore.edit { it.clear() }
     }

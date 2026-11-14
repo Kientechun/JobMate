@@ -72,6 +72,17 @@
                     android:textAllCaps="false"
                     android:textColor="@color/primary" />
             </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/btnNotifications"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="end|top"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Thông báo"
+                android:src="@drawable/ic_notification"
+                app:tint="@color/text_secondary" />
         </com.google.android.material.card.MaterialCardView>
 
         <!-- Profile Completion -->
@@ -136,119 +147,176 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Career Group -->
-        <TextView
-            style="@style/TextAppearance.JobMate.Body"
+        <LinearLayout
+            android:id="@+id/candidateGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/screen_padding"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/profile_career_group"
-            android:textStyle="bold" />
+            android:orientation="vertical">
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/screen_padding"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
-            app:strokeColor="@color/border"
-            app:strokeWidth="1dp">
-
-            <LinearLayout
+            <!-- Career Group -->
+            <TextView
+                style="@style/TextAppearance.JobMate.Body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginHorizontal="@dimen/screen_padding"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/profile_career_group"
+                android:textStyle="bold" />
 
-                <include
-                    android:id="@+id/itemPersonalInfo"
-                    layout="@layout/item_profile_row" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginHorizontal="16dp"
-                    android:background="@color/border" />
-
-                <include
-                    android:id="@+id/itemMyCv"
-                    layout="@layout/item_profile_row" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginHorizontal="16dp"
-                    android:background="@color/border" />
-
-                <include
-                    android:id="@+id/itemSkills"
-                    layout="@layout/item_profile_row" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginHorizontal="16dp"
-                    android:background="@color/border" />
-
-                <include
-                    android:id="@+id/itemEducation"
-                    layout="@layout/item_profile_row" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginHorizontal="16dp"
-                    android:background="@color/border" />
-
-                <include
-                    android:id="@+id/itemExperience"
-                    layout="@layout/item_profile_row" />
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Activity Group -->
-        <TextView
-            style="@style/TextAppearance.JobMate.Body"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/screen_padding"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/profile_activity_group"
-            android:textStyle="bold" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/screen_padding"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
-            app:strokeColor="@color/border"
-            app:strokeWidth="1dp">
-
-            <LinearLayout
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginHorizontal="@dimen/screen_padding"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/border"
+                app:strokeWidth="1dp">
 
-                <include
-                    android:id="@+id/itemFavoriteJobs"
-                    layout="@layout/item_profile_row" />
-
-                <View
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginHorizontal="16dp"
-                    android:background="@color/border" />
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                <include
-                    android:id="@+id/itemAppliedJobs"
-                    layout="@layout/item_profile_row" />
+                    <include
+                        android:id="@+id/itemPersonalInfo"
+                        layout="@layout/item_profile_row" />
 
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="16dp"
+                        android:background="@color/border" />
+
+                    <include
+                        android:id="@+id/itemMyCv"
+                        layout="@layout/item_profile_row" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="16dp"
+                        android:background="@color/border" />
+
+                    <include
+                        android:id="@+id/itemSkills"
+                        layout="@layout/item_profile_row" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="16dp"
+                        android:background="@color/border" />
+
+                    <include
+                        android:id="@+id/itemEducation"
+                        layout="@layout/item_profile_row" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="16dp"
+                        android:background="@color/border" />
+
+                    <include
+                        android:id="@+id/itemExperience"
+                        layout="@layout/item_profile_row" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Activity Group -->
+            <TextView
+                style="@style/TextAppearance.JobMate.Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_padding"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/profile_activity_group"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_padding"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/border"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <include
+                        android:id="@+id/itemFavoriteJobs"
+                        layout="@layout/item_profile_row" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="16dp"
+                        android:background="@color/border" />
+
+                    <include
+                        android:id="@+id/itemAppliedJobs"
+                        layout="@layout/item_profile_row" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="16dp"
+                        android:background="@color/border" />
+
+                    <include
+                        android:id="@+id/itemInterviews"
+                        layout="@layout/item_profile_row" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <!-- Recruiter / Admin Management Group -->
+        <LinearLayout
+            android:id="@+id/managementGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/TextAppearance.JobMate.Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_padding"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp"
+                android:text="Quản lý"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_padding"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/border"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <include
+                        android:id="@+id/itemDashboard"
+                        layout="@layout/item_profile_row" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
 
         <!-- Account Group -->
         <TextView

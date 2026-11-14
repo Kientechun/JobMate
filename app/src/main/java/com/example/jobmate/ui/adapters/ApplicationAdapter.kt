@@ -26,18 +26,20 @@ class ApplicationAdapter(private val onDetailClick: (ApplicationDTO) -> Unit) :
             
             // Set status background based on state
             val statusBg = when (application.status) {
-                2 -> R.drawable.bg_status_success
-                0 -> R.drawable.bg_status_warning
-                3 -> R.drawable.bg_status_error
+                1 -> R.drawable.bg_status_success // Approved
+                0 -> R.drawable.bg_status_pending // Pending
+                2 -> R.drawable.bg_status_error   // Rejected
+                3 -> R.drawable.bg_status_warning // UnderReview
                 else -> R.drawable.bg_status_pending
             }
             binding.tvStatus.setBackgroundResource(statusBg)
             
             // Text color matching semantic state
             val textColor = when (application.status) {
-                2 -> R.color.success
-                0 -> R.color.warning
-                3 -> R.color.error
+                1 -> R.color.success
+                0 -> R.color.text_secondary
+                2 -> R.color.error
+                3 -> R.color.warning
                 else -> R.color.text_secondary
             }
             binding.tvStatus.setTextColor(ContextCompat.getColor(context, textColor))
@@ -47,11 +49,10 @@ class ApplicationAdapter(private val onDetailClick: (ApplicationDTO) -> Unit) :
         }
 
         private fun mapStatus(status: Int): String = when (status) {
-            0 -> "Đang chờ duyệt"
-            1 -> "Đã xem"
-            2 -> "Được chấp nhận"
-            3 -> "Đã từ chối"
-            4 -> "Đã rút hồ sơ"
+            0 -> "Chờ duyệt"
+            1 -> "Đã chấp nhận"
+            2 -> "Đã từ chối"
+            3 -> "Đang xem xét"
             else -> "Không xác định"
         }
     }

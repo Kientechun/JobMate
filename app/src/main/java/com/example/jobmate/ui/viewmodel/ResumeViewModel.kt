@@ -88,4 +88,19 @@ class ResumeViewModel @Inject constructor(
             }
         }
     }
+
+    private val _uploadStatus = MutableStateFlow<Resource<String>?>(null)
+    val uploadStatus: StateFlow<Resource<String>?> = _uploadStatus.asStateFlow()
+
+    fun uploadResume(filePart: okhttp3.MultipartBody.Part) {
+        viewModelScope.launch {
+            repository.uploadResume(filePart).collect {
+                _uploadStatus.value = it
+            }
+        }
+    }
+
+    fun resetUploadStatus() {
+        _uploadStatus.value = null
+    }
 }

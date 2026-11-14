@@ -91,5 +91,6 @@ namespace JobMate.Application.DTOs.Resumes
         public List<ProjectDto> Projects { get; set; }
         public List<CertificateDto> Certificates { get; set; }
         public List<LanguageDto> Languages { get; set; }
+        public string FileUrl { get; set; }
     }
 }

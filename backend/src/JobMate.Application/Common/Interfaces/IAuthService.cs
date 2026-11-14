@@ -11,6 +11,7 @@ namespace JobMate.Application.Common.Interfaces
         Task<ApiResponse<AuthResponse>> RefreshTokenAsync(string token, string refreshToken, string ipAddress);
         Task<ApiResponse<bool>> RevokeTokenAsync(string token, string ipAddress);
         Task<ApplicationUserDto?> GetCurrentUserAsync(string userId);
+        Task<ApiResponse<bool>> UpdateProfileAsync(string userId, UpdateProfileRequest request);
     }
 
     public class ApplicationUserDto

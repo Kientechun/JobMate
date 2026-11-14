@@ -73,7 +73,19 @@ class LoginFragment : Fragment() {
                             binding.progressBar.visibility = View.GONE
                             binding.btnLogin.isEnabled = true
                             Toast.makeText(requireContext(), R.string.login_success, Toast.LENGTH_SHORT).show()
-                            findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                            
+                            val roles = resource.data?.user?.roles ?: emptyList()
+                            when {
+                                roles.contains("Admin") -> {
+                                    findNavController().navigate(R.id.action_loginFragment_to_adminDashboardFragment)
+                                }
+                                roles.contains("Recruiter") -> {
+                                    findNavController().navigate(R.id.action_loginFragment_to_recruiterDashboardFragment)
+                                }
+                                else -> {
+                                    findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                                }
+                            }
                         }
                         is Resource.Error -> {
                             binding.progressBar.visibility = View.GONE

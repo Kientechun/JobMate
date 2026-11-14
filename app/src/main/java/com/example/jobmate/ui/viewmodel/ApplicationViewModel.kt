@@ -76,8 +76,9 @@ class ApplicationViewModel @Inject constructor(
             allApplications.filter { 
                 when (status) {
                     "Chờ duyệt" -> it.status == 0 // Pending
-                    "Đã duyệt" -> it.status == 2   // Accepted
-                    "Từ chối" -> it.status == 3    // Rejected
+                    "Đã duyệt" -> it.status == 1   // Approved
+                    "Từ chối" -> it.status == 2    // Rejected
+                    "Đang xem xét" -> it.status == 3 // UnderReview
                     else -> true
                 }
             }

@@ -52,14 +52,23 @@ data class UserDTO(
     @SerializedName("id") val id: String,
     @SerializedName("email") val email: String,
     @SerializedName("fullName") val fullName: String,
-    @SerializedName("roles") val roles: List<String>
+    @SerializedName("roles") val roles: List<String>,
+    @SerializedName("phoneNumber") val phoneNumber: String? = null
+)
+
+data class UpdateProfileRequestDTO(
+    @SerializedName("fullName") val fullName: String,
+    @SerializedName("phoneNumber") val phoneNumber: String?
 )
 
 data class JobDTO(
     @SerializedName("id") val id: Int,
     @SerializedName("title") val title: String,
     @SerializedName("description") val description: String,
+    @SerializedName("requirements") val requirements: String?,
+    @SerializedName("benefits") val benefits: String?,
     @SerializedName("companyName") val companyName: String,
+    @SerializedName("companyLogo") val companyLogo: String?,
     @SerializedName("location") val location: String,
     @SerializedName("salaryRange") val salaryRange: Double,
     @SerializedName("jobType") val jobType: String,
@@ -67,7 +76,8 @@ data class JobDTO(
     @SerializedName("expiryDate") val expiryDate: String,
     @SerializedName("status") val status: Int,
     @SerializedName("companyId") val companyId: String,
-    @SerializedName("createdAt") val createdAt: String
+    @SerializedName("createdAt") val createdAt: String,
+    @SerializedName("isSaved") val isSaved: Boolean = false
 )
 
 data class CategoryDTO(
@@ -152,7 +162,8 @@ data class CreateResumeRequestDTO(
     @SerializedName("skills") val skills: List<SkillDTO>,
     @SerializedName("projects") val projects: List<ProjectDTO>,
     @SerializedName("certificates") val certificates: List<CertificateDTO>,
-    @SerializedName("languages") val languages: List<LanguageDTO>
+    @SerializedName("languages") val languages: List<LanguageDTO>,
+    @SerializedName("fileUrl") val fileUrl: String? = null
 )
 
 data class ApplicationDTO(
@@ -199,4 +210,82 @@ data class JobRecommendationDTO(
     @SerializedName("companyName") val companyName: String,
     @SerializedName("matchScore") val matchScore: Double,
     @SerializedName("reason") val reason: String
+)
+
+data class NotificationDTO(
+    @SerializedName("id") val id: Int,
+    @SerializedName("title") val title: String,
+    @SerializedName("message") val message: String,
+    @SerializedName("type") val type: String,
+    @SerializedName("relatedId") val relatedId: String?,
+    @SerializedName("isRead") val isRead: Boolean,
+    @SerializedName("createdAt") val createdAt: String
+)
+
+data class DeviceTokenRequestDTO(
+    @SerializedName("token") val token: String,
+    @SerializedName("deviceType") val deviceType: String
+)
+
+data class InterviewDTO(
+    @SerializedName("id") val id: Int,
+    @SerializedName("jobApplicationId") val jobApplicationId: Int,
+    @SerializedName("jobTitle") val jobTitle: String,
+    @SerializedName("companyName") val companyName: String,
+    @SerializedName("scheduledAt") val scheduledAt: String,
+    @SerializedName("location") val location: String,
+    @SerializedName("type") val type: String,
+    @SerializedName("notes") val notes: String,
+    @SerializedName("status") val status: String,
+    @SerializedName("result") val result: String?
+)
+
+data class CreateJobRequestDTO(
+    @SerializedName("title") val title: String,
+    @SerializedName("description") val description: String,
+    @SerializedName("requirements") val requirements: String?,
+    @SerializedName("benefits") val benefits: String?,
+    @SerializedName("location") val location: String,
+    @SerializedName("salaryRange") val salaryRange: Double,
+    @SerializedName("jobType") val jobType: String,
+    @SerializedName("experience") val experience: String,
+    @SerializedName("expiryDate") val expiryDate: String,
+    @SerializedName("categoryId") val categoryId: Int
+)
+
+data class RecruiterDashboardDTO(
+    @SerializedName("activeJobs") val activeJobs: Int,
+    @SerializedName("totalApplications") val totalApplications: Int,
+    @SerializedName("pendingApplications") val pendingApplications: Int,
+    @SerializedName("recentApplications") val recentApplications: List<ApplicationDTO>
+)
+
+data class AdminDashboardDTO(
+    @SerializedName("totalUsers") val totalUsers: Int,
+    @SerializedName("totalJobs") val totalJobs: Int,
+    @SerializedName("pendingJobs") val pendingJobs: Int,
+    @SerializedName("totalCompanies") val totalCompanies: Int,
+    @SerializedName("growthRate") val growthRate: Double
+)
+
+data class UpdateApplicationStatusRequestDTO(
+    @SerializedName("status") val status: Int,
+    @SerializedName("note") val note: String
+)
+
+data class RejectJobRequestDTO(
+    @SerializedName("reason") val reason: String
+)
+
+data class UserManagementDTO(
+    @SerializedName("id") val id: String,
+    @SerializedName("email") val email: String,
+    @SerializedName("fullName") val fullName: String,
+    @SerializedName("roles") val roles: List<String>,
+    @SerializedName("isLocked") val isLocked: Boolean,
+    @SerializedName("createdAt") val createdAt: String
+)
+
+data class CategoryRequestDTO(
+    @SerializedName("name") val name: String
 )

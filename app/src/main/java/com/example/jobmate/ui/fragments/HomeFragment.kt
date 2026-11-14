@@ -47,10 +47,15 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        jobAdapter = JobAdapter { job ->
-            val action = HomeFragmentDirections.actionHomeFragmentToJobDetailFragment(job.id)
-            findNavController().navigate(action)
-        }
+        jobAdapter = JobAdapter(
+            onClick = { job ->
+                val action = HomeFragmentDirections.actionHomeFragmentToJobDetailFragment(job.id)
+                findNavController().navigate(action)
+            },
+            onFavoriteClick = { job ->
+                viewModel.saveJob(job.id)
+            }
+        )
         binding.rvJobs.apply {
             adapter = jobAdapter
             layoutManager = LinearLayoutManager(requireContext())
@@ -92,6 +97,20 @@ class HomeFragment : Fragment() {
                             jobAdapter.submitList(emptyList())
                         }
                         else -> {}
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.saveJobStatus.collect { resource ->
+                    if (resource is Resource.Success) {
+                        Toast.makeText(requireContext(), "Đã lưu công việc", Toast.LENGTH_SHORT).show()
+                        viewModel.resetSaveStatus()
+                    } else if (resource is Resource.Error) {
+                        Toast.makeText(requireContext(), resource.message, Toast.LENGTH_SHORT).show()
+                        viewModel.resetSaveStatus()
                     }
                 }
             }

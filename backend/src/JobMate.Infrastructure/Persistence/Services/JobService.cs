@@ -142,7 +142,7 @@ namespace JobMate.Infrastructure.Persistence.Services
             return ApiResponse<bool>.Success(true, "Job removed from saved list.");
         }
 
-        public async Task<PaginatedList<JobDto>> GetRecruiterJobsAsync(string companyId, int pageIndex, int pageSize)
+        public async Task<PaginatedList<JobDto>> GetRecruiterJobsAsync(int companyId, int pageIndex, int pageSize)
         {
             var query = _context.Jobs
                 .Where(j => j.CompanyId == companyId && !j.IsDeleted)
@@ -183,7 +183,7 @@ namespace JobMate.Infrastructure.Persistence.Services
             return ApiResponse<int>.Success(job.Id, "Job created successfully and pending approval.");
         }
 
-        public async Task<ApiResponse<bool>> UpdateJobAsync(int id, UpdateJobRequest request, string userId, string companyId)
+        public async Task<ApiResponse<bool>> UpdateJobAsync(int id, UpdateJobRequest request, string userId, int companyId)
         {
             var job = await _context.Jobs.FindAsync(id);
 
@@ -208,7 +208,7 @@ namespace JobMate.Infrastructure.Persistence.Services
             return ApiResponse<bool>.Success(true, "Job updated and pending re-approval.");
         }
 
-        public async Task<ApiResponse<bool>> CloseJobAsync(int id, string userId, string companyId)
+        public async Task<ApiResponse<bool>> CloseJobAsync(int id, string userId, int companyId)
         {
             var job = await _context.Jobs.FindAsync(id);
 
@@ -226,7 +226,7 @@ namespace JobMate.Infrastructure.Persistence.Services
             return ApiResponse<bool>.Success(true, "Job closed.");
         }
 
-        public async Task<JobDto?> GetRecruiterJobByIdAsync(int id, string companyId)
+        public async Task<JobDto?> GetRecruiterJobByIdAsync(int id, int companyId)
         {
             var job = await _context.Jobs
                 .FirstOrDefaultAsync(j => j.Id == id && j.CompanyId == companyId && !j.IsDeleted);
@@ -283,7 +283,7 @@ namespace JobMate.Infrastructure.Persistence.Services
                 Experience = job.Experience,
                 ExpiryDate = job.ExpiryDate,
                 Status = job.Status,
-                CompanyId = job.CompanyId,
+                CompanyId = job.CompanyId ?? 0,
                 CreatedAt = job.CreatedAt
             };
         }

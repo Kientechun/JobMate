@@ -16,7 +16,8 @@ namespace JobMate.Domain.Entities
         public string Experience { get; set; } = string.Empty;
         public DateTime ExpiryDate { get; set; }
         public JobStatus Status { get; set; } = JobStatus.Draft;
-        public string CompanyId { get; set; } = string.Empty;
+        public int? CompanyId { get; set; }
+        public virtual Company? Company { get; set; }
         public int? CategoryId { get; set; }
         public virtual Category? Category { get; set; }
 

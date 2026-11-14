@@ -20,6 +20,8 @@ import com.example.jobmate.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 
 @AndroidEntryPoint
 class ResumesFragment : Fragment() {
@@ -42,19 +44,79 @@ class ResumesFragment : Fragment() {
             findNavController().navigate(R.id.action_resumesFragment_to_createResumeFragment)
         }
 
+        binding.fabUploadResume.setOnClickListener {
+            pickPdf()
+        }
+
         observeViewModel()
+    }
+
+    private val selectPdfLauncher = androidx.activity.result.contract.ActivityResultContracts.GetContent()
+    private val pickPdfLauncher = registerForActivityResult(selectPdfLauncher) { uri ->
+        uri?.let { uploadPdf(it) }
+    }
+
+    private fun pickPdf() {
+        pickPdfLauncher.launch("application/pdf")
+    }
+
+    private fun uploadPdf(uri: android.net.Uri) {
+        val contentResolver = requireContext().contentResolver
+        val inputStream = contentResolver.openInputStream(uri) ?: return
+        val fileName = getFileName(uri) ?: "resume.pdf"
+        
+        // Check file size (5MB limit)
+        val fileSize = getFileSize(uri)
+        if (fileSize > 5 * 1024 * 1024) {
+            Toast.makeText(requireContext(), "File quá lớn. Tối đa 5MB", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val mediaType = "application/pdf".toMediaTypeOrNull()
+        val requestFile = inputStream.readBytes().toRequestBody(mediaType)
+        val body = okhttp3.MultipartBody.Part.createFormData("file", fileName, requestFile)
+        viewModel.uploadResume(body)
+    }
+
+    private fun getFileName(uri: android.net.Uri): String? {
+        var name: String? = null
+        val cursor = requireContext().contentResolver.query(uri, null, null, null, null)
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val nameIndex = it.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
+                if (nameIndex != -1) name = it.getString(nameIndex)
+            }
+        }
+        return name
+    }
+
+    private fun getFileSize(uri: android.net.Uri): Long {
+        val cursor = requireContext().contentResolver.query(uri, null, null, null, null)
+        var size: Long = 0
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val sizeIndex = it.getColumnIndex(android.provider.OpenableColumns.SIZE)
+                if (sizeIndex != -1) size = it.getLong(sizeIndex)
+            }
+        }
+        return size
     }
 
     private fun setupRecyclerView() {
         resumeAdapter = ResumeAdapter(
             onEditClick = { resume ->
-                // findNavController().navigate(ResumesFragmentDirections.actionResumesFragmentToEditResumeFragment(resume.id))
+                val action = ResumesFragmentDirections.actionResumesFragmentToEditResumeFragment(resume.id)
+                findNavController().navigate(action)
             },
             onDeleteClick = { resume ->
                 viewModel.deleteResume(resume.id)
             },
             onSetDefaultClick = { resume ->
                 viewModel.setDefaultResume(resume.id)
+            },
+            onAnalyzeClick = { resume ->
+                val action = ResumesFragmentDirections.actionResumesFragmentToResumeAnalysisFragment(resume.id)
+                findNavController().navigate(action)
             }
         )
         binding.rvResumes.apply {
@@ -76,6 +138,27 @@ class ResumesFragment : Fragment() {
                         is Resource.Error -> {
                             binding.progressBar.visibility = View.GONE
                             Toast.makeText(requireContext(), resource.message, Toast.LENGTH_SHORT).show()
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uploadStatus.collectLatest { resource ->
+                    when (resource) {
+                        is Resource.Loading -> binding.progressBar.visibility = View.VISIBLE
+                        is Resource.Success -> {
+                            binding.progressBar.visibility = View.GONE
+                            Toast.makeText(requireContext(), "Tải lên CV thành công", Toast.LENGTH_SHORT).show()
+                            viewModel.fetchResumes()
+                            viewModel.resetUploadStatus()
+                        }
+                        is Resource.Error -> {
+                            binding.progressBar.visibility = View.GONE
+                            Toast.makeText(requireContext(), resource.message, Toast.LENGTH_SHORT).show()
+                            viewModel.resetUploadStatus()
                         }
                         else -> {}
                     }

@@ -15,7 +15,7 @@ namespace JobMate.Application.DTOs.Jobs
         public string Experience { get; set; } = string.Empty;
         public DateTime ExpiryDate { get; set; }
         public JobStatus Status { get; set; }
-        public string CompanyId { get; set; } = string.Empty;
+        public int CompanyId { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

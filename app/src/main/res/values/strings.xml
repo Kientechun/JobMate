@@ -50,6 +50,19 @@
     <string name="profile_favorite_jobs_desc">Các công việc bạn đã lưu</string>
     <string name="profile_applied_jobs">Việc làm đã ứng tuyển</string>
     <string name="profile_applied_jobs_desc">Theo dõi tiến độ hồ sơ</string>
+    <string name="profile_interviews">Lịch phỏng vấn</string>
+    <string name="profile_interviews_desc">Danh sách các buổi phỏng vấn đã hẹn</string>
+    <string name="notifications_title">Thông báo</string>
+    <string name="interviews_title">Lịch phỏng vấn</string>
+    <string name="resume_analysis_title">Phân tích CV</string>
+    <string name="ai_analyze">Phân tích AI</string>
+    <string name="analysis_overview">Tổng quan</string>
+    <string name="analysis_strengths">Điểm mạnh</string>
+    <string name="analysis_improvements">Cần cải thiện</string>
+    <string name="analysis_suggestions">Gợi ý từ AI</string>
+    <string name="recommendations_title">Việc làm gợi ý</string>
+    <string name="recommendations_desc">Dựa trên CV của bạn, AI gợi ý các công việc sau:</string>
+    <string name="match_score">Độ phù hợp: %1$.0f%%</string>
 
     <string name="profile_account_group">Tài khoản</string>
     <string name="profile_settings">Cài đặt</string>
@@ -86,4 +99,39 @@
     <string name="cover_letter_hint">Viết một chút về bản thân bạn và tại sao bạn phù hợp với vị trí này...</string>
     <string name="submit_application">Nộp hồ sơ</string>
     <string name="select_resume">Chọn CV ứng tuyển</string>
+
+    <!-- Recruiter -->
+    <string name="recruiter_dashboard">Dashboard Nhà tuyển dụng</string>
+    <string name="recruiter_dashboard_desc">Quản lý tin tuyển dụng và ứng viên</string>
+    <string name="active_jobs">Tin đang chạy</string>
+    <string name="total_applications">Tổng ứng tuyển</string>
+    <string name="pending_applications">Chờ phản hồi</string>
+    <string name="recent_applications">Ứng tuyển gần đây</string>
+    <string name="manage_jobs">Quản lý tin tuyển dụng</string>
+    <string name="create_job">Đăng tin mới</string>
+    <string name="edit_job">Sửa tin tuyển dụng</string>
+    <string name="close_job">Đóng tin</string>
+    <string name="job_status_pending">Đang chờ duyệt</string>
+    <string name="job_status_active">Đang hiển thị</string>
+    <string name="job_status_rejected">Bị từ chối</string>
+    <string name="job_status_closed">Đã đóng</string>
+    <string name="view_cv">Xem CV</string>
+    <string name="update_status">Cập nhật trạng thái</string>
+    <string name="status_note_hint">Ghi chú (ví dụ: Lý do từ chối, hẹn lịch phỏng vấn...)</string>
+
+    <!-- Admin -->
+    <string name="admin_dashboard">Hệ thống Quản trị</string>
+    <string name="admin_dashboard_desc">Quản trị toàn bộ hệ thống Jobmate</string>
+    <string name="total_users">Người dùng</string>
+    <string name="total_jobs">Tổng số tin</string>
+    <string name="pending_jobs">Tin chờ duyệt</string>
+    <string name="total_companies">Công ty</string>
+    <string name="manage_users">Quản lý người dùng</string>
+    <string name="manage_categories">Quản lý danh mục</string>
+    <string name="lock_account">Khóa tài khoản</string>
+    <string name="unlock_account">Mở khóa</string>
+    <string name="approve">Duyệt</string>
+    <string name="reject">Từ chối</string>
+    <string name="reject_reason_title">Lý do từ chối</string>
+    <string name="reject_reason_hint">Nhập lý do không duyệt tin này...</string>
 </resources>

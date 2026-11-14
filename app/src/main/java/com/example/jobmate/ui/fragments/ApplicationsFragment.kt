@@ -74,6 +74,7 @@ class ApplicationsFragment : Fragment() {
                 R.id.chipPending -> "Chờ duyệt"
                 R.id.chipApproved -> "Đã duyệt"
                 R.id.chipRejected -> "Từ chối"
+                R.id.chipUnderReview -> "Đang xem xét"
                 else -> "Tất cả"
             }
             viewModel.applyFilter(status)

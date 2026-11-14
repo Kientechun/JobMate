@@ -14,10 +14,12 @@ namespace JobMate.Infrastructure.Persistence.Services
     public class ApplicationService : IApplicationService
     {
         private readonly IJobMateDbContext _context;
+        private readonly INotificationService _notificationService;
 
-        public ApplicationService(IJobMateDbContext context)
+        public ApplicationService(IJobMateDbContext context, INotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
         }
 
         public async Task<ApplicationDto> ApplyJobAsync(CreateApplicationRequest request, string userId)
@@ -133,6 +135,7 @@ namespace JobMate.Infrastructure.Persistence.Services
         public async Task<bool> UpdateApplicationStatusAsync(int id, UpdateApplicationStatusRequest request, string recruiterId)
         {
             var application = await _context.JobApplications
+                .Include(a => a.Job)
                 .Include(a => a.Histories)
                 .FirstOrDefaultAsync(a => a.Id == id && !a.IsDeleted);
 
@@ -151,6 +154,16 @@ namespace JobMate.Infrastructure.Persistence.Services
             });
 
             await _context.SaveChangesAsync();
+
+            // Send notification to Candidate
+            await _notificationService.SendNotificationAsync(
+                application.UserId,
+                "Application Status Updated",
+                $"Your application for {application.Job.Title} is now {request.Status}.",
+                "StatusUpdate",
+                application.Id.ToString()
+            );
+
             return true;
         }
 

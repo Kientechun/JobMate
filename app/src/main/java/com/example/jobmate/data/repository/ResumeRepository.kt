@@ -95,4 +95,18 @@ class ResumeRepository @Inject constructor(
             emit(Resource.Error(e.localizedMessage ?: "Lỗi kết nối"))
         }
     }
+
+    fun uploadResume(filePart: okhttp3.MultipartBody.Part): Flow<Resource<String>> = flow {
+        emit(Resource.Loading())
+        try {
+            val response = apiService.uploadResume(filePart)
+            if (response.isSuccessful && response.body()?.succeeded == true) {
+                emit(Resource.Success(response.body()?.data!!))
+            } else {
+                emit(Resource.Error(response.body()?.message ?: "Lỗi tải lên CV"))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error(e.localizedMessage ?: "Lỗi kết nối"))
+        }
+    }
 }

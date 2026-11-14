@@ -5,6 +5,7 @@ import com.example.jobmate.data.models.AuthResponse
 import com.example.jobmate.data.models.AuthResponseDTO
 import com.example.jobmate.data.models.LoginRequestDTO
 import com.example.jobmate.data.models.RegisterRequestDTO
+import com.example.jobmate.data.models.UpdateProfileRequestDTO
 import com.example.jobmate.data.models.User
 import com.example.jobmate.data.models.UserDTO
 import com.example.jobmate.data.models.toDomain
@@ -81,9 +82,53 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    suspend fun logout() {
-        tokenManager.clear()
+    suspend fun logout(): Flow<Resource<Boolean>> = flow {
+        emit(Resource.Loading())
+        try {
+            val response = apiService.logout()
+            if (response.isSuccessful) {
+                tokenManager.clear()
+                emit(Resource.Success(true))
+            } else {
+                // Vẫn xóa token local dù server fail để user thoát được
+                tokenManager.clear()
+                emit(Resource.Error("Đã đăng xuất local"))
+            }
+        } catch (e: Exception) {
+            tokenManager.clear()
+            emit(Resource.Error("Lỗi kết nối, đã xóa phiên làm việc"))
+        }
     }
     
     fun getUserRole() = tokenManager.userRole
+
+    fun getCurrentUser(): Flow<Resource<UserDTO>> = flow {
+        emit(Resource.Loading())
+        try {
+            val response = apiService.getCurrentUser()
+            if (response.isSuccessful && response.body() != null) {
+                emit(Resource.Success(response.body()!!))
+            } else {
+                emit(Resource.Error("Không thể lấy thông tin người dùng"))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error(e.localizedMessage ?: "Lỗi không xác định"))
+        }
+    }
+
+    fun updateProfile(request: UpdateProfileRequestDTO): Flow<Resource<Boolean>> = flow {
+        emit(Resource.Loading())
+        try {
+            val response = apiService.updateProfile(request)
+            val body = response.body()
+            if (response.isSuccessful && body?.succeeded == true) {
+                tokenManager.updateName(request.fullName)
+                emit(Resource.Success(true))
+            } else {
+                emit(Resource.Error(body?.message ?: "Cập nhật hồ sơ thất bại"))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error(e.localizedMessage ?: "Lỗi không xác định"))
+        }
+    }
 }

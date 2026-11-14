@@ -22,9 +22,13 @@ namespace JobMate.RecruiterWeb.Controllers
 
         public async Task<IActionResult> Index(int? jobId, ApplicationStatus? status)
         {
+            var user = await _userManager.GetUserAsync(User);
+            if (user?.CompanyId == null) return Forbid();
+
             var query = _context.JobApplications
                 .Include(a => a.Job)
                 .Include(a => a.Resume)
+                .Where(a => a.Job.CompanyId == user.CompanyId)
                 .AsQueryable();
 
             if (jobId.HasValue)
@@ -44,15 +48,15 @@ namespace JobMate.RecruiterWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateStatus(int id, ApplicationStatus status, string notes)
         {
-            var application = await _context.JobApplications.FindAsync(id);
+            var user = await _userManager.GetUserAsync(User);
+            var application = await _context.JobApplications
+                .Include(a => a.Job)
+                .FirstOrDefaultAsync(a => a.Id == id);
+
             if (application == null) return NotFound();
+            if (user?.CompanyId == null || application.Job.CompanyId != user.CompanyId) return Forbid();
 
-            // Update status
             application.Status = status;
-
-            // Add to history (assuming ApplicationHistory entity exists)
-            // application.History.Add(new ApplicationHistory { ... });
-
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index), new { jobId = application.JobId });
@@ -60,12 +64,14 @@ namespace JobMate.RecruiterWeb.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
+            var user = await _userManager.GetUserAsync(User);
             var application = await _context.JobApplications
                 .Include(a => a.Job)
                 .Include(a => a.Resume)
                 .FirstOrDefaultAsync(a => a.Id == id);
 
             if (application == null) return NotFound();
+            if (user?.CompanyId == null || application.Job.CompanyId != user.CompanyId) return Forbid();
 
             return View(application);
         }

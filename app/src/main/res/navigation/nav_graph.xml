@@ -18,6 +18,16 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginFragment_to_adminDashboardFragment"
+            app:destination="@id/adminDashboardFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginFragment_to_recruiterDashboardFragment"
+            app:destination="@id/recruiterDashboardFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -31,6 +41,16 @@
         <action
             android:id="@+id/action_registerFragment_to_homeFragment"
             app:destination="@id/homeFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_registerFragment_to_adminDashboardFragment"
+            app:destination="@id/adminDashboardFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_registerFragment_to_recruiterDashboardFragment"
+            app:destination="@id/recruiterDashboardFragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
     </fragment>
@@ -74,7 +94,54 @@
         <action
             android:id="@+id/action_profileFragment_to_resumesFragment"
             app:destination="@id/resumesFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_notificationsFragment"
+            app:destination="@id/notificationsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_savedJobsFragment"
+            app:destination="@id/savedJobsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_adminDashboardFragment"
+            app:destination="@id/adminDashboardFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_recruiterDashboardFragment"
+            app:destination="@id/recruiterDashboardFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.jobmate.ui.fragments.EditProfileFragment"
+        android:label="Chỉnh sửa thông tin"
+        tools:layout="@layout/fragment_edit_profile" />
+
+    <fragment
+        android:id="@+id/savedJobsFragment"
+        android:name="com.example.jobmate.ui.fragments.SavedJobsFragment"
+        android:label="Việc làm đã lưu"
+        tools:layout="@layout/fragment_saved_jobs">
+        <action
+            android:id="@+id/action_savedJobsFragment_to_jobDetailFragment"
+            app:destination="@id/jobDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.example.jobmate.ui.fragments.NotificationsFragment"
+        android:label="Thông báo"
+        tools:layout="@layout/fragment_notifications">
+        <action
+            android:id="@+id/action_notificationsFragment_to_applicationDetailFragment"
+            app:destination="@id/applicationDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/interviewsFragment"
+        android:name="com.example.jobmate.ui.fragments.InterviewsFragment"
+        android:label="Lịch phỏng vấn"
+        tools:layout="@layout/fragment_interviews" />
 
     <fragment
         android:id="@+id/resumesFragment"
@@ -84,13 +151,61 @@
         <action
             android:id="@+id/action_resumesFragment_to_createResumeFragment"
             app:destination="@id/createResumeFragment" />
+        <action
+            android:id="@+id/action_resumesFragment_to_editResumeFragment"
+            app:destination="@id/editResumeFragment" />
+        <action
+            android:id="@+id/action_resumesFragment_to_resumeAnalysisFragment"
+            app:destination="@id/resumeAnalysisFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editResumeFragment"
+        android:name="com.example.jobmate.ui.fragments.CreateResumeFragment"
+        android:label="Chỉnh sửa CV"
+        tools:layout="@layout/fragment_create_resume">
+        <argument
+            android:name="resumeId"
+            app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/resumeAnalysisFragment"
+        android:name="com.example.jobmate.ui.fragments.ResumeAnalysisFragment"
+        android:label="Phân tích CV"
+        tools:layout="@layout/fragment_resume_analysis">
+        <argument
+            android:name="resumeId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_resumeAnalysisFragment_to_jobRecommendationsFragment"
+            app:destination="@id/jobRecommendationsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/jobRecommendationsFragment"
+        android:name="com.example.jobmate.ui.fragments.JobRecommendationsFragment"
+        android:label="Việc làm gợi ý"
+        tools:layout="@layout/fragment_job_recommendations">
+        <argument
+            android:name="resumeId"
+            android:defaultValue="-1"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_jobRecommendationsFragment_to_jobDetailFragment"
+            app:destination="@id/jobDetailFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/createResumeFragment"
         android:name="com.example.jobmate.ui.fragments.CreateResumeFragment"
         android:label="Tạo CV"
-        tools:layout="@layout/fragment_create_resume" />
+        tools:layout="@layout/fragment_create_resume">
+        <argument
+            android:name="resumeId"
+            android:defaultValue="-1"
+            app:argType="integer" />
+    </fragment>
 
     <fragment
         android:id="@+id/applicationsFragment"
@@ -114,5 +229,95 @@
             android:name="applicationId"
             app:argType="integer" />
     </fragment>
+
+    <!-- Recruiter -->
+    <fragment
+        android:id="@+id/recruiterDashboardFragment"
+        android:name="com.example.jobmate.ui.fragments.recruiter.RecruiterDashboardFragment"
+        android:label="Dashboard Nhà tuyển dụng"
+        tools:layout="@layout/fragment_recruiter_dashboard">
+        <action
+            android:id="@+id/action_recruiterDashboardFragment_to_manageJobsFragment"
+            app:destination="@id/manageJobsFragment" />
+        <action
+            android:id="@+id/action_recruiterDashboardFragment_to_createJobFragment"
+            app:destination="@id/createJobFragment" />
+        <action
+            android:id="@+id/action_recruiterDashboardFragment_to_applicationDetailFragment"
+            app:destination="@id/applicationDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/manageJobsFragment"
+        android:name="com.example.jobmate.ui.fragments.recruiter.ManageJobsFragment"
+        android:label="Quản lý tin tuyển dụng"
+        tools:layout="@layout/fragment_recruiter_jobs">
+        <action
+            android:id="@+id/action_manageJobsFragment_to_createJobFragment"
+            app:destination="@id/createJobFragment" />
+        <action
+            android:id="@+id/action_manageJobsFragment_to_recruiterApplicationsFragment"
+            app:destination="@id/recruiterApplicationsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/createJobFragment"
+        android:name="com.example.jobmate.ui.fragments.recruiter.CreateEditJobFragment"
+        android:label="Đăng tin tuyển dụng"
+        tools:layout="@layout/fragment_create_job">
+        <argument
+            android:name="jobId"
+            android:defaultValue="-1"
+            app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/recruiterApplicationsFragment"
+        android:name="com.example.jobmate.ui.fragments.recruiter.RecruiterApplicationsFragment"
+        android:label="Danh sách ứng viên"
+        tools:layout="@layout/fragment_recruiter_applications">
+        <argument
+            android:name="jobId"
+            android:defaultValue="-1"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_recruiterApplicationsFragment_to_applicationDetailFragment"
+            app:destination="@id/applicationDetailFragment" />
+    </fragment>
+
+    <!-- Admin -->
+    <fragment
+        android:id="@+id/adminDashboardFragment"
+        android:name="com.example.jobmate.ui.fragments.admin.AdminDashboardFragment"
+        android:label="Admin Dashboard"
+        tools:layout="@layout/fragment_admin_dashboard">
+        <action
+            android:id="@+id/action_adminDashboardFragment_to_userManagementFragment"
+            app:destination="@id/userManagementFragment" />
+        <action
+            android:id="@+id/action_adminDashboardFragment_to_jobApprovalFragment"
+            app:destination="@id/jobApprovalFragment" />
+        <action
+            android:id="@+id/action_adminDashboardFragment_to_categoryManagementFragment"
+            app:destination="@id/categoryManagementFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/userManagementFragment"
+        android:name="com.example.jobmate.ui.fragments.admin.UserManagementFragment"
+        android:label="Quản lý người dùng"
+        tools:layout="@layout/fragment_admin_users" />
+
+    <fragment
+        android:id="@+id/jobApprovalFragment"
+        android:name="com.example.jobmate.ui.fragments.admin.JobApprovalFragment"
+        android:label="Duyệt tin tuyển dụng"
+        tools:layout="@layout/fragment_recruiter_jobs" />
+
+    <fragment
+        android:id="@+id/categoryManagementFragment"
+        android:name="com.example.jobmate.ui.fragments.admin.CategoryManagementFragment"
+        android:label="Quản lý ngành nghề"
+        tools:layout="@layout/fragment_admin_categories" />
 
 </navigation>

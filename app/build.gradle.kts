@@ -76,6 +76,11 @@ dependencies {
 
     // SwipeRefreshLayout
     implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.androidx.gridlayout)
+
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
+    implementation("com.google.firebase:firebase-messaging-ktx")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

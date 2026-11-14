@@ -24,6 +24,7 @@ namespace JobMate.Application.Common.Interfaces
         DbSet<DeviceToken> DeviceTokens { get; }
         DbSet<Notification> Notifications { get; }
         DbSet<Interview> Interviews { get; }
+        DbSet<Company> Companies { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

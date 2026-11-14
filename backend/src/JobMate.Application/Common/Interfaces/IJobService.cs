@@ -18,11 +18,11 @@ namespace JobMate.Application.Common.Interfaces
         Task<ApiResponse<bool>> UnsaveJobAsync(int jobId, string userId);
 
         // Recruiter methods
-        Task<PaginatedList<JobDto>> GetRecruiterJobsAsync(string companyId, int pageIndex, int pageSize);
+        Task<PaginatedList<JobDto>> GetRecruiterJobsAsync(int companyId, int pageIndex, int pageSize);
         Task<ApiResponse<int>> CreateJobAsync(CreateJobRequest request, string userId);
-        Task<ApiResponse<bool>> UpdateJobAsync(int id, UpdateJobRequest request, string userId, string companyId);
-        Task<ApiResponse<bool>> CloseJobAsync(int id, string userId, string companyId);
-        Task<JobDto?> GetRecruiterJobByIdAsync(int id, string companyId);
+        Task<ApiResponse<bool>> UpdateJobAsync(int id, UpdateJobRequest request, string userId, int companyId);
+        Task<ApiResponse<bool>> CloseJobAsync(int id, string userId, int companyId);
+        Task<JobDto?> GetRecruiterJobByIdAsync(int id, int companyId);
 
         // Admin methods
         Task<PaginatedList<JobDto>> GetPendingJobsAsync(int pageIndex, int pageSize);

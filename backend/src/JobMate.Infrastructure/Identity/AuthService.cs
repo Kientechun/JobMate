@@ -78,8 +78,10 @@ namespace JobMate.Infrastructure.Identity
                 return ApiResponse<AuthResponse>.Failure("Invalid token.");
 
             var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var hashedRefreshToken = _jwtTokenGenerator.HashToken(refreshToken);
+
             var user = await _context.RefreshTokens
-                .Where(u => u.UserId == userId && u.Token == refreshToken)
+                .Where(u => u.UserId == userId && u.Token == hashedRefreshToken)
                 .Join(_userManager.Users, rt => rt.UserId, u => u.Id, (rt, u) => new { RefreshToken = rt, User = u })
                 .FirstOrDefaultAsync();
 
@@ -95,18 +97,19 @@ namespace JobMate.Infrastructure.Identity
             var roles = await _userManager.GetRolesAsync(user.User);
             var newToken = _jwtTokenGenerator.GenerateToken(user.User.Id, user.User.UserName!, roles);
             var newRefreshToken = _jwtTokenGenerator.GenerateRefreshToken();
+            var newHashedRefreshToken = _jwtTokenGenerator.HashToken(newRefreshToken);
 
             // Save new refresh token
             var refreshTokenEntity = new RefreshToken
             {
-                Token = newRefreshToken,
+                Token = newHashedRefreshToken,
                 ExpiresAt = DateTime.UtcNow.AddDays(7),
                 CreatedAt = DateTime.UtcNow,
                 CreatedByIp = ipAddress,
                 UserId = user.User.Id
             };
 
-            user.RefreshToken.ReplacedByToken = newRefreshToken;
+            user.RefreshToken.ReplacedByToken = newHashedRefreshToken;
             _context.RefreshTokens.Add(refreshTokenEntity);
             await _context.SaveChangesAsync();
 
@@ -123,8 +126,9 @@ namespace JobMate.Infrastructure.Identity
 
         public async Task<ApiResponse<bool>> RevokeTokenAsync(string refreshToken, string ipAddress)
         {
+            var hashedToken = _jwtTokenGenerator.HashToken(refreshToken);
             var tokenEntity = await _context.RefreshTokens
-                .FirstOrDefaultAsync(x => x.Token == refreshToken);
+                .FirstOrDefaultAsync(x => x.Token == hashedToken);
 
             if (tokenEntity == null || !tokenEntity.IsActive)
                 return ApiResponse<bool>.Failure("Invalid token.");
@@ -153,18 +157,59 @@ namespace JobMate.Infrastructure.Identity
             };
         }
 
+        public async Task<ApiResponse<bool>> UpdateProfileAsync(string userId, UpdateProfileRequest request)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return ApiResponse<bool>.Failure("User not found.");
+
+            user.FullName = request.FullName;
+            if (!string.IsNullOrEmpty(request.PhoneNumber))
+            {
+                user.PhoneNumber = request.PhoneNumber;
+            }
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                return ApiResponse<bool>.Failure(errors);
+            }
+
+            return ApiResponse<bool>.Success(true, "Profile updated successfully.");
+        }
+
         private async Task<ApiResponse<AuthResponse>> GenerateAuthResponse(ApplicationUser user)
         {
             var roles = await _userManager.GetRolesAsync(user);
-            var token = _jwtTokenGenerator.GenerateToken(user.Id, user.UserName!, roles);
+
+            var claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Name, user.UserName!)
+            };
+
+            if (user.CompanyId.HasValue)
+            {
+                claims.Add(new Claim("CompanyId", user.CompanyId.Value.ToString()));
+            }
+
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            var token = _jwtTokenGenerator.GenerateTokenWithClaims(claims);
             var refreshToken = _jwtTokenGenerator.GenerateRefreshToken();
+            var hashedRefreshToken = _jwtTokenGenerator.HashToken(refreshToken);
 
             var refreshTokenEntity = new RefreshToken
             {
-                Token = refreshToken,
+                Token = hashedRefreshToken,
                 ExpiresAt = DateTime.UtcNow.AddDays(7),
                 CreatedAt = DateTime.UtcNow,
-                CreatedByIp = "127.0.0.1", // In real scenario, get from HttpContext
+                CreatedByIp = "127.0.0.1",
                 UserId = user.Id
             };
 

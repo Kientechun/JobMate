@@ -6,12 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.jobmate.R
 import com.example.jobmate.data.local.TokenManager
 import com.example.jobmate.databinding.FragmentProfileBinding
+import com.example.jobmate.ui.viewmodel.ProfileViewModel
+import com.example.jobmate.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,6 +25,7 @@ class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
+    private val viewModel: ProfileViewModel by viewModels()
 
     @Inject
     lateinit var tokenManager: TokenManager
@@ -33,6 +39,29 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupUserInfo()
         setupMenuActions()
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.logoutState.collectLatest { resource ->
+                    when (resource) {
+                        is Resource.Loading -> {
+                            // Show loading if needed
+                        }
+                        is Resource.Success -> {
+                            findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
+                        }
+                        is Resource.Error -> {
+                            // Dù lỗi server vẫn cho logout ở app
+                            findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
     }
 
     private fun setupUserInfo() {
@@ -42,19 +71,44 @@ class ProfileFragment : Fragment() {
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            tokenManager.userRole.collect { role ->
-                // Currently only displaying email/name, but could show role if needed
+            tokenManager.userEmail.collect { email ->
+                binding.tvUserEmail.text = email
             }
         }
-        // In a real app, email would also come from TokenManager
-        // For now, I'll assume we can get it from there if we add it to TokenManager
-        // TokenManager currently has userEmail? Let's check.
+        viewLifecycleOwner.lifecycleScope.launch {
+            tokenManager.userRole.collect { role ->
+                updateUIBasedOnRole(role)
+            }
+        }
+    }
+
+    private fun updateUIBasedOnRole(role: String?) {
+        when (role) {
+            "Recruiter" -> {
+                binding.candidateGroup.visibility = View.GONE
+                binding.managementGroup.visibility = View.VISIBLE
+                setupRow(binding.itemDashboard, R.drawable.ic_work, R.string.recruiter_dashboard, R.string.recruiter_dashboard_desc) {
+                    findNavController().navigate(R.id.action_profileFragment_to_recruiterDashboardFragment)
+                }
+            }
+            "Admin" -> {
+                binding.candidateGroup.visibility = View.GONE
+                binding.managementGroup.visibility = View.VISIBLE
+                setupRow(binding.itemDashboard, R.drawable.ic_work, R.string.admin_dashboard, R.string.admin_dashboard_desc) {
+                    findNavController().navigate(R.id.action_profileFragment_to_adminDashboardFragment)
+                }
+            }
+            else -> {
+                binding.candidateGroup.visibility = View.VISIBLE
+                binding.managementGroup.visibility = View.GONE
+            }
+        }
     }
 
     private fun setupMenuActions() {
         // Career Group
         setupRow(binding.itemPersonalInfo, R.drawable.ic_person, R.string.profile_personal_info, R.string.profile_personal_info_desc) {
-            // Navigate to personal info
+            findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment)
         }
         setupRow(binding.itemMyCv, R.drawable.ic_work, R.string.profile_my_cv, R.string.profile_my_cv_desc) {
             findNavController().navigate(R.id.action_profileFragment_to_resumesFragment)
@@ -71,10 +125,13 @@ class ProfileFragment : Fragment() {
 
         // Activity Group
         setupRow(binding.itemFavoriteJobs, R.drawable.ic_work, R.string.profile_favorite_jobs, R.string.profile_favorite_jobs_desc) {
-            // Navigate to favorites
+            findNavController().navigate(R.id.action_profileFragment_to_savedJobsFragment)
         }
         setupRow(binding.itemAppliedJobs, R.drawable.ic_recent, R.string.profile_applied_jobs, R.string.profile_applied_jobs_desc) {
             findNavController().navigate(R.id.applicationsFragment)
+        }
+        setupRow(binding.itemInterviews, R.drawable.ic_recent, R.string.profile_interviews, R.string.profile_interviews_desc) {
+            findNavController().navigate(R.id.interviewsFragment)
         }
 
         // Account Group
@@ -84,6 +141,14 @@ class ProfileFragment : Fragment() {
 
         binding.btnLogout.setOnClickListener {
             showLogoutConfirmation()
+        }
+
+        binding.btnNotifications.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_notificationsFragment)
+        }
+
+        binding.btnEditProfile.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment)
         }
     }
 
@@ -108,16 +173,9 @@ class ProfileFragment : Fragment() {
             .setMessage(R.string.logout_confirm_msg)
             .setNegativeButton(R.string.cancel, null)
             .setPositiveButton(R.string.logout_confirm_yes) { _, _ ->
-                performLogout()
+                viewModel.logout()
             }
             .show()
-    }
-
-    private fun performLogout() {
-        lifecycleScope.launch {
-            tokenManager.clear()
-            findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
-        }
     }
 
     override fun onDestroyView() {

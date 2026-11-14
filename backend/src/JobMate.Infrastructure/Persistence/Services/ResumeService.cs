@@ -52,6 +52,7 @@ namespace JobMate.Infrastructure.Persistence.Services
                 PhoneNumber = request.PhoneNumber,
                 Address = request.Address,
                 Summary = request.Summary,
+                FileUrl = request.FileUrl,
                 UserId = userId,
                 CreatedAt = DateTime.UtcNow,
                 CreatedBy = userId
@@ -104,6 +105,7 @@ namespace JobMate.Infrastructure.Persistence.Services
             resume.PhoneNumber = request.PhoneNumber;
             resume.Address = request.Address;
             resume.Summary = request.Summary;
+            resume.FileUrl = request.FileUrl;
             resume.LastModifiedAt = DateTime.UtcNow;
             resume.LastModifiedBy = userId;
 

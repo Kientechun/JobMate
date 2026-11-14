@@ -65,4 +65,56 @@ class JobRepository @Inject constructor(
             emit(Resource.Error(e.localizedMessage ?: "Lỗi không xác định"))
         }
     }
+
+    fun getSavedJobs(page: Int, pageSize: Int = 20): Flow<Resource<List<Job>>> = flow {
+        emit(Resource.Loading())
+        try {
+            val response = apiService.getSavedJobs(pageIndex = page, pageSize = pageSize)
+            val body = response.body()
+            if (response.isSuccessful && body?.succeeded == true) {
+                val jobsDTO = body.data?.items
+                if (jobsDTO.isNullOrEmpty()) {
+                    emit(Resource.Empty())
+                } else {
+                    emit(Resource.Success(jobsDTO.map { it.toDomain() }))
+                }
+            } else {
+                emit(Resource.Error(body?.message ?: "Lỗi lấy danh sách việc làm đã lưu"))
+            }
+        } catch (e: IOException) {
+            emit(Resource.Error("Lỗi kết nối mạng"))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.localizedMessage ?: "Lỗi không xác định"))
+        }
+    }
+
+    fun saveJob(jobId: Int): Flow<Resource<Boolean>> = flow {
+        emit(Resource.Loading())
+        try {
+            val response = apiService.saveJob(jobId)
+            val body = response.body()
+            if (response.isSuccessful && body?.succeeded == true) {
+                emit(Resource.Success(body.data ?: true))
+            } else {
+                emit(Resource.Error(body?.message ?: "Không thể lưu việc làm"))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error(e.localizedMessage ?: "Lỗi không xác định"))
+        }
+    }
+
+    fun unsaveJob(jobId: Int): Flow<Resource<Boolean>> = flow {
+        emit(Resource.Loading())
+        try {
+            val response = apiService.unsaveJob(jobId)
+            val body = response.body()
+            if (response.isSuccessful && body?.succeeded == true) {
+                emit(Resource.Success(body.data ?: true))
+            } else {
+                emit(Resource.Error(body?.message ?: "Không thể bỏ lưu việc làm"))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error(e.localizedMessage ?: "Lỗi không xác định"))
+        }
+    }
 }

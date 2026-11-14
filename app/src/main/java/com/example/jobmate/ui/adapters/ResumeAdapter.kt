@@ -12,7 +12,8 @@ import com.example.jobmate.databinding.ItemResumeBinding
 class ResumeAdapter(
     private val onEditClick: (ResumeDTO) -> Unit,
     private val onDeleteClick: (ResumeDTO) -> Unit,
-    private val onSetDefaultClick: (ResumeDTO) -> Unit
+    private val onSetDefaultClick: (ResumeDTO) -> Unit,
+    private val onAnalyzeClick: (ResumeDTO) -> Unit
 ) : ListAdapter<ResumeDTO, ResumeAdapter.ResumeViewHolder>(ResumeDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResumeViewHolder {
@@ -35,6 +36,7 @@ class ResumeAdapter(
                 btnEdit.setOnClickListener { onEditClick(resume) }
                 btnDelete.setOnClickListener { onDeleteClick(resume) }
                 btnSetDefault.setOnClickListener { onSetDefaultClick(resume) }
+                btnAnalyze.setOnClickListener { onAnalyzeClick(resume) }
             }
         }
     }

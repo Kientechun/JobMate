@@ -40,43 +40,103 @@ namespace JobMate.Application.UnitTests.Services
             var result = await _jobService.ApproveJobAsync(jobId);
 
             // Assert
-            Assert.True(result.IsSuccess);
+            Assert.True(result.Succeeded);
             Assert.Equal(JobStatus.Published, job.Status);
             _mockContext.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
-        public async Task GetJobByIdAsync_ShouldReturnNull_WhenJobIsNotPublished()
+        public async Task CreateJobAsync_ShouldSetStatusToPending()
+        {
+            // Arrange
+            var request = new CreateJobRequest
+            {
+                Title = "New Developer",
+                Description = "A new job",
+                CompanyName = "Tech Corp",
+                Location = "Remote",
+                SalaryRange = 1000,
+                JobType = "FullTime",
+                Experience = "Senior",
+                ExpiryDate = DateTime.UtcNow.AddDays(30)
+            };
+            var userId = "recruiter1";
+
+            _mockContext.Setup(c => c.Jobs.Add(It.IsAny<Job>()));
+
+            // Act
+            var result = await _jobService.CreateJobAsync(request, userId);
+
+            // Assert
+            Assert.True(result.Succeeded);
+            _mockContext.Verify(c => c.Jobs.Add(It.Is<Job>(j => j.Status == JobStatus.Pending)), Times.Once);
+            _mockContext.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task UpdateJobAsync_ShouldSucceed_WhenCompanyMatches()
         {
             // Arrange
             var jobId = 1;
-            var job = new Job { Id = jobId, Status = JobStatus.Pending, IsDeleted = false };
+            var companyId = 10;
+            var userId = "recruiter1";
+            var job = new Job { Id = jobId, CompanyId = companyId, IsDeleted = false };
+            var request = new UpdateJobRequest { Title = "Updated Title", CompanyName = "Tech Corp", Location = "Remote" };
 
-            var data = new List<Job> { job }.AsQueryable();
-            var mockSet = new Mock<DbSet<Job>>();
-            mockSet.As<IQueryable<Job>>().Setup(m => m.Provider).Returns(data.Provider);
-            mockSet.As<IQueryable<Job>>().Setup(m => m.Expression).Returns(data.Expression);
-            mockSet.As<IQueryable<Job>>().Setup(m => m.ElementType).Returns(data.ElementType);
-            mockSet.As<IQueryable<Job>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
-
-            _mockContext.Setup(c => c.Jobs).Returns(mockSet.Object);
+            _mockContext.Setup(c => c.Jobs.FindAsync(jobId)).ReturnsAsync(job);
 
             // Act
-            var result = await _jobService.GetJobByIdAsync(jobId);
+            var result = await _jobService.UpdateJobAsync(jobId, request, userId, companyId);
 
             // Assert
-            Assert.Null(result);
+            Assert.True(result.Succeeded);
+            Assert.Equal("Updated Title", job.Title);
+            Assert.Equal(JobStatus.Pending, job.Status);
+        }
+
+        [Fact]
+        public async Task UpdateJobAsync_ShouldFail_WhenCompanyDoesNotMatch()
+        {
+            // Arrange
+            var jobId = 1;
+            var jobCompanyId = 10;
+            var recruiterCompanyId = 20;
+            var userId = "recruiter1";
+            var job = new Job { Id = jobId, CompanyId = jobCompanyId, IsDeleted = false };
+            var request = new UpdateJobRequest();
+
+            _mockContext.Setup(c => c.Jobs.FindAsync(jobId)).ReturnsAsync(job);
+
+            // Act
+            var result = await _jobService.UpdateJobAsync(jobId, request, userId, recruiterCompanyId);
+
+            // Assert
+            Assert.False(result.Succeeded);
+            Assert.Contains("You do not have permission to update this job.", result.Errors);
+        }
+
+        [Fact]
+        public async Task CloseJobAsync_ShouldSucceed_WhenCompanyMatches()
+        {
+            // Arrange
+            var jobId = 1;
+            var companyId = 10;
+            var userId = "recruiter1";
+            var job = new Job { Id = jobId, CompanyId = companyId, IsDeleted = false, Status = JobStatus.Published };
+
+            _mockContext.Setup(c => c.Jobs.FindAsync(jobId)).ReturnsAsync(job);
+
+            // Act
+            var result = await _jobService.CloseJobAsync(jobId, userId, companyId);
+
+            // Assert
+            Assert.True(result.Succeeded);
+            Assert.Equal(JobStatus.Closed, job.Status);
         }
 
         private Mock<DbSet<T>> CreateMockDbSet<T>(List<T> sourceList) where T : class
         {
-            var queryable = sourceList.AsQueryable();
-            var dbSet = new Mock<DbSet<T>>();
-            dbSet.As<IQueryable<T>>().Setup(m => m.Provider).Returns(queryable.Provider);
-            dbSet.As<IQueryable<T>>().Setup(m => m.Expression).Returns(queryable.Expression);
-            dbSet.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(queryable.ElementType);
-            dbSet.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(queryable.GetEnumerator());
-            return dbSet;
+            return MockDbSetExtensions.CreateMockDbSet(sourceList);
         }
     }
 }

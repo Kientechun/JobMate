@@ -15,12 +15,28 @@
             android:orientation="vertical"
             android:padding="@dimen/screen_padding">
 
-            <TextView
-                android:id="@+id/tvTitle"
-                style="@style/TextAppearance.JobMate.HeadingLarge"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Software Engineer" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    style="@style/TextAppearance.JobMate.HeadingLarge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@id/btnFavorite"
+                    android:text="Software Engineer" />
+
+                <ImageButton
+                    android:id="@+id/btnFavorite"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@android:drawable/btn_star_big_off"
+                    app:tint="@color/text_secondary" />
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/tvCompany"
@@ -98,6 +114,22 @@
                 android:layout_marginTop="@dimen/spacing_standard"
                 android:lineSpacingExtra="4dp"
                 android:text="Job requirements go here..." />
+
+            <TextView
+                style="@style/TextAppearance.JobMate.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_section"
+                android:text="Quyền lợi" />
+
+            <TextView
+                android:id="@+id/tvBenefits"
+                style="@style/TextAppearance.JobMate.Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_standard"
+                android:lineSpacingExtra="4dp"
+                android:text="Job benefits go here..." />
 
             <Space
                 android:layout_width="match_parent"

@@ -24,10 +24,14 @@ namespace JobMate.RecruiterWeb.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var userId = _userManager.GetUserId(User);
-            // Filtering by CompanyId is needed here.
-            // Mocking company context for now.
+            var user = await _userManager.GetUserAsync(User);
+            if (user?.CompanyId == null)
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+
             var jobs = await _context.Jobs
+                .Where(j => j.CompanyId == user.CompanyId)
                 .Include(j => j.Category)
                 .Include(j => j.Applications)
                 .OrderByDescending(j => j.CreatedAt)
@@ -45,13 +49,14 @@ namespace JobMate.RecruiterWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Job job)
         {
+            var user = await _userManager.GetUserAsync(User);
+            if (user?.CompanyId == null) return Unauthorized();
+
             if (ModelState.IsValid)
             {
                 job.CreatedAt = DateTime.UtcNow;
-                job.Status = JobStatus.Pending; // Send for approval by default or Draft
-
-                // Set CompanyId from Recruiter context
-                // job.CompanyId = ...
+                job.Status = JobStatus.Pending;
+                job.CompanyId = user.CompanyId.Value;
 
                 _context.Add(job);
                 await _context.SaveChangesAsync();
@@ -62,10 +67,11 @@ namespace JobMate.RecruiterWeb.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
+            var user = await _userManager.GetUserAsync(User);
             var job = await _context.Jobs.FindAsync(id);
-            if (job == null) return NotFound();
 
-            // Check ownership
+            if (job == null) return NotFound();
+            if (user?.CompanyId == null || job.CompanyId != user.CompanyId) return Forbid();
 
             return View(job);
         }
@@ -76,25 +82,20 @@ namespace JobMate.RecruiterWeb.Controllers
         {
             if (id != job.Id) return NotFound();
 
+            var user = await _userManager.GetUserAsync(User);
+            var existingJob = await _context.Jobs.AsNoTracking().FirstOrDefaultAsync(j => j.Id == id);
+
+            if (existingJob == null) return NotFound();
+            if (user?.CompanyId == null || existingJob.CompanyId != user.CompanyId) return Forbid();
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var existingJob = await _context.Jobs.FindAsync(id);
-                    if (existingJob == null) return NotFound();
+                    job.CompanyId = user.CompanyId.Value;
+                    job.CreatedAt = existingJob.CreatedAt; // Preserve original creation date
 
-                    // Check ownership
-
-                    existingJob.Title = job.Title;
-                    existingJob.Description = job.Description;
-                    existingJob.Location = job.Location;
-                    existingJob.SalaryRange = job.SalaryRange;
-                    existingJob.JobType = job.JobType;
-                    existingJob.Experience = job.Experience;
-                    existingJob.ExpiryDate = job.ExpiryDate;
-                    existingJob.Status = job.Status;
-
-                    _context.Update(existingJob);
+                    _context.Update(job);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -111,10 +112,13 @@ namespace JobMate.RecruiterWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
+            var user = await _userManager.GetUserAsync(User);
             var job = await _context.Jobs.FindAsync(id);
+
             if (job != null)
             {
-                // Check ownership
+                if (user?.CompanyId == null || job.CompanyId != user.CompanyId) return Forbid();
+
                 _context.Jobs.Remove(job);
                 await _context.SaveChangesAsync();
             }
